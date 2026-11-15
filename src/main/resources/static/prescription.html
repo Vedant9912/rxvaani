@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Prescription Pad - RxVaani Clinical EHR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/static/navbar.js"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-900">
+
+  <!-- Navbar -->
+  <div id="navbar-container"></div>
+
+  <!-- Main Container -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-6">
+    
+    <!-- Top Action Toolbar -->
+    <div class="flex items-center justify-between flex-wrap gap-4 border-b border-slate-200 pb-4">
+      <div>
+        <h1 class="text-xl font-extrabold text-slate-900 tracking-tight flex items-center space-x-2">
+          <span>Digital Prescription Pad</span>
+          <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+            Doctor Review Mode
+          </span>
+        </h1>
+        <p class="text-xs text-slate-500 font-medium mt-0.5">
+          "AI Drafts, Doctor Decides." Verify and approve before official issuance.
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <a href="/studio" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+          ← Back to Voice Studio
+        </a>
+        <button id="btn-issue" onclick="issueAndDownloadPdf()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md shadow-emerald-600/20 flex items-center space-x-2">
+          <span id="pdf-spinner" class="hidden animate-spin">📄</span>
+          <span>✅ Sign & Issue Official PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Safety Warning Banner (Amber) -->
+    <div id="uncertain-box" class="hidden bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl text-amber-900 text-xs">
+      <div class="font-bold flex items-center space-x-1.5 text-amber-900 mb-1">
+        <span>⚠️ Doctor Verification Alert:</span>
+        <span class="font-normal text-amber-800">Missing or ambiguous clinical parameters detected in consultation audio:</span>
+      </div>
+      <ul id="uncertain-list" class="list-disc list-inside space-y-0.5 text-amber-800 font-medium ml-1"></ul>
+    </div>
+
+    <!-- The Official Prescription Document Card -->
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      
+      <!-- Clinic & Doctor Header Banner -->
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 flex items-center justify-between">
+        <div>
+          <div class="text-xl font-bold tracking-tight" id="disp-clinic-name">Aarogya Clinic & Diagnostics</div>
+          <div class="text-xs text-slate-300 font-medium mt-1" id="disp-clinic-addr">Shop 12, Health Square, MG Road, New Delhi</div>
+        </div>
+        <div class="text-right">
+          <div class="text-base font-bold text-sky-300" id="disp-doctor-name">Dr. Vedant Sharma, MBBS, MD</div>
+          <div class="text-xs text-slate-400 font-mono mt-0.5" id="disp-doctor-reg">MCI-Reg: 84920/2019</div>
+          <div class="text-xs text-slate-400 mt-0.5">Date: <span id="disp-rx-date"></span></div>
+        </div>
+      </div>
+
+      <!-- Prescription Document Body -->
+      <div class="p-6 md:p-8 space-y-6">
+        
+        <!-- Patient Information Strip -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+          <div>
+            <span class="text-[11px] text-slate-500 font-semibold block">Patient Name:</span>
+            <input type="text" id="rx-patient-name" class="font-bold text-slate-900 bg-transparent border-b border-slate-300 focus:outline-none focus:border-sky-500 w-full" />
+          </div>
+          <div>
+            <span class="text-[11px] text-slate-500 font-semibold block">Age:</span>
+            <input type="number" id="rx-patient-age" class="font-bold text-slate-900 bg-transparent border-b border-slate-300 focus:outline-none focus:border-sky-500 w-full" />
+          </div>
+          <div>
+            <span class="text-[11px] text-slate-500 font-semibold block">Gender:</span>
+            <select id="rx-patient-gender" class="font-bold text-slate-900 bg-transparent border-b border-slate-300 focus:outline-none focus:border-sky-500 w-full">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <span class="text-[11px] text-slate-500 font-semibold block">Prescription ID:</span>
+            <span class="font-mono font-bold text-slate-700" id="disp-rx-id">RXV-2026-001</span>
+          </div>
+        </div>
+
+        <!-- Clinical Findings -->
+        <div class="space-y-2 text-xs">
+          <div class="flex items-center space-x-2">
+            <span class="font-bold text-slate-900">Provisional Diagnosis:</span>
+            <input type="text" id="rx-diagnosis" class="font-bold text-sky-700 bg-transparent border-b border-slate-300 focus:outline-none focus:border-sky-500 flex-1" placeholder="e.g. Acute Viral Fever" />
+          </div>
+          <div>
+            <span class="font-semibold text-slate-700">Symptoms:</span>
+            <input type="text" id="rx-symptoms" class="text-slate-600 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 ml-1 w-2/3" placeholder="Symptoms list..." />
+          </div>
+        </div>
+
+        <!-- Medicines Table -->
+        <div>
+          <div class="flex items-center justify-between mb-2.5">
+            <div class="flex items-center space-x-1.5 font-black text-slate-900 text-sm">
+              <span class="text-xl text-sky-600">℞</span>
+              <span>Prescribed Medications</span>
+            </div>
+            <button onclick="addMedRow()" class="px-3 py-1 bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-xs rounded-lg border border-sky-200 transition">
+              + Add Medication
+            </button>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">
+                <tr>
+                  <th class="py-3 px-3 w-10">#</th>
+                  <th class="py-3 px-3">Medicine & Strength</th>
+                  <th class="py-3 px-3 w-24">Dose</th>
+                  <th class="py-3 px-3 w-32">Frequency</th>
+                  <th class="py-3 px-3 w-36">Timing</th>
+                  <th class="py-3 px-3 w-28">Duration</th>
+                  <th class="py-3 px-3 text-center w-16">Action</th>
+                </tr>
+              </thead>
+              <tbody id="med-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- General Advice & Follow-up -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs pt-2">
+          <div>
+            <label class="font-bold text-slate-800 block mb-1">General Advice & Dietary Precautions:</label>
+            <textarea id="rx-advice" rows="3" class="w-full p-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 bg-slate-50/50"></textarea>
+          </div>
+          <div>
+            <label class="font-bold text-slate-800 block mb-1">Recommended Follow-up Visit:</label>
+            <input type="text" id="rx-followup" placeholder="e.g. After 3 days" class="w-full p-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 bg-slate-50/50" />
+            <div class="mt-3 p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-500 leading-relaxed">
+              ⚕️ <b>Legal Protocol:</b> Official PDF will include doctor's registration number, signature seal, and the statutory AI review disclaimer.
+            </div>
+          </div>
+        </div>
+
+        <!-- Document Footer -->
+        <div class="pt-6 border-t border-slate-200 flex items-center justify-between flex-wrap gap-4">
+          <div class="text-xs text-slate-400">
+            AI-assisted clinical draft verified by registered medical practitioner.
+          </div>
+          <div class="text-right">
+            <div class="text-xs font-bold text-slate-900">Dr. Vedant Sharma</div>
+            <div class="text-[11px] text-slate-500">Authorized Medical Signature & Stamp</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Success Modal Card -->
+    <div id="success-banner" class="hidden bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex items-center justify-between text-xs text-emerald-900 font-semibold shadow-xs">
+      <div class="flex items-center space-x-2">
+        <span class="text-base">🎉</span>
+        <span>Prescription PDF successfully approved, signed, and downloaded! Saved to Patient Records.</span>
+      </div>
+      <a href="/records" class="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl font-bold">
+        View All Records ➔
+      </a>
+    </div>
+
+  </main>
+
+  <script>
+    document.getElementById('navbar-container').innerHTML = renderNavbar('prescription');
+    document.getElementById('disp-rx-date').innerText = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    document.getElementById('disp-rx-id').innerText = `RXV-${Date.now().toString().slice(-6)}`;
+
+    // Load Clinic details
+    const doctorName = localStorage.getItem('rx_doctor_name') || 'Dr. Vedant Sharma, MBBS, MD';
+    const clinicName = localStorage.getItem('rx_clinic_name') || 'Aarogya Clinic & Diagnostics';
+    const clinicAddr = localStorage.getItem('rx_clinic_address') || 'Shop 12, Health Square, MG Road, New Delhi';
+    const doctorReg = localStorage.getItem('rx_doctor_reg') || 'MCI-Reg: 84920/2019';
+
+    document.getElementById('disp-doctor-name').innerText = doctorName;
+    document.getElementById('disp-clinic-name').innerText = clinicName;
+    document.getElementById('disp-clinic-addr').innerText = clinicAddr;
+    document.getElementById('disp-doctor-reg').innerText = doctorReg;
+
+    // Load Prescription Data from session
+    let rxData = null;
+    try {
+      rxData = JSON.parse(sessionStorage.getItem('rx_prescription_json'));
+    } catch (e) {
+      rxData = null;
+    }
+
+    if (!rxData) {
+      // Default fallback if opened directly
+      rxData = {
+        patient: { name: sessionStorage.getItem('rx_patient_name') || 'Ramesh Kumar', age: 42, gender: 'Male' },
+        symptoms: ['Fever', 'Body ache'],
+        diagnosis: 'Acute Viral Fever',
+        medicines: [
+          { name: 'Paracetamol', strength: '650 mg', dose: '1 tab', frequency: 'Twice daily', timing: 'After food', duration: '3 days', confidence: 'high' }
+        ],
+        advice: ['Drink plenty of warm fluids & rest.'],
+        follow_up: 'After 3 days',
+        uncertain_fields: []
+      };
+    }
+
+    // Populate Fields
+    document.getElementById('rx-patient-name').value = rxData.patient?.name || '';
+    document.getElementById('rx-patient-age').value = rxData.patient?.age || '';
+    document.getElementById('rx-patient-gender').value = rxData.patient?.gender || 'Male';
+    document.getElementById('rx-diagnosis').value = rxData.diagnosis || '';
+    document.getElementById('rx-symptoms').value = (rxData.symptoms || []).join(', ');
+    document.getElementById('rx-advice').value = (rxData.advice || []).join('\n');
+    document.getElementById('rx-followup').value = rxData.follow_up || '';
+
+    // Handle Uncertain Fields
+    if (rxData.uncertain_fields && rxData.uncertain_fields.length > 0) {
+      document.getElementById('uncertain-box').classList.remove('hidden');
+      const list = document.getElementById('uncertain-list');
+      list.innerHTML = rxData.uncertain_fields.map(u => `<li>${u}</li>`).join('');
+    }
+
+    // Render Medicines Table
+    function renderMedTable() {
+      const tbody = document.getElementById('med-table-body');
+      tbody.innerHTML = '';
+      (rxData.medicines || []).forEach((m, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-mono text-slate-400">${idx + 1}</td>
+          <td class="py-2.5 px-3">
+            <input type="text" value="${m.name}" onchange="updateMed(${idx}, 'name', this.value)" class="font-bold text-slate-900 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-32" />
+            <input type="text" value="${m.strength || ''}" placeholder="Strength" onchange="updateMed(${idx}, 'strength', this.value)" class="ml-1 text-slate-600 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-16 text-[11px]" />
+          </td>
+          <td class="py-2.5 px-3">
+            <input type="text" value="${m.dose || '1 tab'}" onchange="updateMed(${idx}, 'dose', this.value)" class="text-slate-700 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-16" />
+          </td>
+          <td class="py-2.5 px-3">
+            <input type="text" value="${m.frequency || 'Twice daily'}" onchange="updateMed(${idx}, 'frequency', this.value)" class="text-slate-700 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-24 font-medium" />
+          </td>
+          <td class="py-2.5 px-3">
+            <input type="text" value="${m.timing || 'After food'}" onchange="updateMed(${idx}, 'timing', this.value)" class="text-slate-700 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-28" />
+          </td>
+          <td class="py-2.5 px-3">
+            <input type="text" value="${m.duration || '3 days'}" onchange="updateMed(${idx}, 'duration', this.value)" class="text-slate-700 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-16" />
+          </td>
+          <td class="py-2.5 px-3 text-center">
+            <button onclick="removeMed(${idx})" class="text-red-500 hover:text-red-700 font-bold px-1.5 py-0.5 rounded hover:bg-red-50">✕</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateMed(idx, field, val) {
+      rxData.medicines[idx][field] = val;
+    }
+
+    function addMedRow() {
+      rxData.medicines.push({
+        name: 'New Medicine', strength: '500 mg', dose: '1 tab', frequency: 'Twice daily', timing: 'After food', duration: '3 days', confidence: 'high'
+      });
+      renderMedTable();
+    }
+
+    function removeMed(idx) {
+      rxData.medicines.splice(idx, 1);
+      renderMedTable();
+    }
+
+    renderMedTable();
+
+    // Issue and Download PDF
+    async function issueAndDownloadPdf() {
+      // Sync form values
+      rxData.patient.name = document.getElementById('rx-patient-name').value.trim();
+      rxData.patient.age = parseInt(document.getElementById('rx-patient-age').value) || null;
+      rxData.patient.gender = document.getElementById('rx-patient-gender').value;
+      rxData.diagnosis = document.getElementById('rx-diagnosis').value.trim();
+      rxData.symptoms = document.getElementById('rx-symptoms').value.split(',').map(s => s.trim()).filter(Boolean);
+      rxData.advice = document.getElementById('rx-advice').value.split('\n').map(a => a.trim()).filter(Boolean);
+      rxData.follow_up = document.getElementById('rx-followup').value.trim();
+
+      const btn = document.getElementById('btn-issue');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/generate-pdf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prescription: rxData,
+            doctor_name: doctorName,
+            clinic_name: clinicName,
+            clinic_address: clinicAddr,
+            reg_number: doctorReg
+          })
+        });
+
+        if (res.ok) {
+          const blob = await res.blob();
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = downloadUrl;
+          const safeName = (rxData.patient.name || 'Patient').replace(/\s+/g, '_');
+          a.download = `Prescription_${safeName}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+
+          // Save to Patient Records in localStorage
+          saveToHistory(rxData);
+
+          document.getElementById('success-banner').classList.remove('hidden');
+        } else {
+          alert('Failed to generate PDF.');
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function saveToHistory(rx) {
+      let records = [];
+      try {
+        records = JSON.parse(localStorage.getItem('rx_records_list')) || [];
+      } catch (e) {
+        records = [];
+      }
+
+      records.unshift({
+        id: `RXV-${Date.now().toString().slice(-6)}`,
+        date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+        patientName: rx.patient.name || 'Walk-in Patient',
+        age: rx.patient.age || '—',
+        gender: rx.patient.gender || '—',
+        diagnosis: rx.diagnosis || 'Clinical Assessment',
+        medicinesCount: rx.medicines.length,
+        status: 'Issued & Approved'
+      });
+
+      localStorage.setItem('rx_records_list', JSON.stringify(records));
+    }
+  </script>
+</body>
+</html>

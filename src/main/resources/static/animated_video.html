@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RxVaani – Animated Explainer Video Generator (MP4)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/static/navbar.js"></script>
+<style>
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:#F1F5F9}
+  #cv{display:block;width:100%;border-radius:14px;border:2px solid #CBD5E1;
+      box-shadow:0 20px 50px -10px rgba(15,23,42,.15);background:#fff}
+  .pbi{transition:width .4s ease}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spin{animation:spin 1s linear infinite}
+</style>
+</head>
+<body class="min-h-screen bg-slate-100">
+<div id="navbar-container"></div>
+
+<main class="max-w-6xl mx-auto px-4 py-6 space-y-5">
+
+  <!-- HEADER -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold mb-2">
+          <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+          <span>Gnani AI Internship Challenge &nbsp;•&nbsp; RxVaani Demo</span>
+        </div>
+        <h1 class="text-2xl font-black text-slate-900">🎬 Animated Explainer Video Generator</h1>
+        <p class="text-sm text-slate-500 mt-1">
+          Renders a <b>full HD 1280×720</b> Canvas animation with 8 cinematic scenes and
+          <b>American English</b> voiceover, then saves a <b>.webm / MP4-compatible</b> video to your PC.
+        </p>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button onclick="startGeneration()"
+          class="px-5 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm shadow-md transition flex items-center gap-2">
+          🎬 Generate &amp; Download Video
+        </button>
+        <button onclick="stopGeneration()"
+          class="px-4 py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm transition flex items-center gap-2">
+          ⏹ Stop
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div id="statusBar" class="bg-white rounded-xl border border-slate-200 p-4 hidden">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center gap-2">
+        <div id="spinner" class="hidden w-4 h-4 border-2 border-sky-500 border-t-transparent rounded-full spin"></div>
+        <span id="stTxt" class="text-sm font-bold text-slate-800">Rendering…</span>
+      </div>
+      <span id="stPct" class="text-xs font-mono text-slate-500">0%</span>
+    </div>
+    <div class="w-full bg-slate-200 rounded-full h-2.5">
+      <div id="pBar" class="pbi h-2.5 bg-gradient-to-r from-sky-600 to-teal-500 rounded-full" style="width:0%"></div>
+    </div>
+    <p id="stSub" class="text-xs text-slate-400 mt-2">Setting up renderer…</p>
+  </div>
+
+  <!-- CANVAS PREVIEW -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-sm font-bold text-slate-700">🖥 Live Preview (1280 × 720)</h2>
+      <div id="sceneLabel" class="text-xs font-mono text-slate-500">Scene — / 8</div>
+    </div>
+    <canvas id="cv" width="1280" height="720"></canvas>
+  </div>
+
+  <!-- TIPS -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-1">
+      <div class="text-2xl">1️⃣</div><h3 class="font-bold text-slate-900">Click Generate</h3>
+      <p class="text-slate-500">Hit the blue button. All 8 scenes animate on the canvas while recording.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-1">
+      <div class="text-2xl">2️⃣</div><h3 class="font-bold text-slate-900">Keep Tab Active</h3>
+      <p class="text-slate-500">Don't minimise the tab — browsers pause Canvas when hidden. Wait ~3 min.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-1">
+      <div class="text-2xl">3️⃣</div><h3 class="font-bold text-slate-900">Auto Download</h3>
+      <p class="text-slate-500">File saves as <code>.webm</code> (plays in VLC, Chrome, Edge — rename to .mp4 if needed).</p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   RxVaani Animated Video Engine  –  Canvas 2D + MediaRecorder
+═══════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('navbar-container').innerHTML = renderNavbar('video');
+  idleScreen();
+});
+
+const W = 1280, H = 720;
+let animRunning = false, stopReq = false;
+let recorder = null, chunks = [];
+let selectedVoice = null;
+
+// ── Palette ──────────────────────────────────────────────────
+const C = {
+  sky:'#0284C7', skyL:'#E0F2FE', teal:'#0D9488', tealL:'#CCFBF1',
+  indigo:'#4F46E5', emerald:'#059669', emeraldL:'#D1FAE5',
+  amber:'#D97706', amberL:'#FEF3C7', rose:'#E11D48', roseL:'#FFF1F2',
+  s900:'#0F172A', s700:'#334155', s600:'#475569', s500:'#64748B',
+  s300:'#CBD5E1', s200:'#E2E8F0', s100:'#F1F5F9', white:'#FFFFFF',
+};
+
+// ── Math helpers ──────────────────────────────────────────────
+const clamp = (v,lo,hi) => Math.max(lo, Math.min(hi, v));
+const eo    = t => 1 - Math.pow(1-t, 3);          // ease-out cubic
+const p01   = (t, start, len) => eo(clamp((t-start)/len, 0, 1));
+
+// ── Canvas helpers ────────────────────────────────────────────
+function rr(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.arcTo(x+w,y, x+w,y+h, r);
+  ctx.arcTo(x+w,y+h, x,y+h, r);
+  ctx.arcTo(x,y+h, x,y, r);
+  ctx.arcTo(x,y, x+w,y, r);
+  ctx.closePath();
+}
+function fillBox(ctx, x,y,w,h,r,col){ ctx.save(); ctx.fillStyle=col; rr(ctx,x,y,w,h,r); ctx.fill(); ctx.restore(); }
+function strokeBox(ctx,x,y,w,h,r,col,lw=1.5){ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; rr(ctx,x,y,w,h,r); ctx.stroke(); ctx.restore(); }
+function txt(ctx, s, x, y, font, col, align='left', base='alphabetic'){
+  ctx.save(); ctx.fillStyle=col; ctx.font=font; ctx.textAlign=align; ctx.textBaseline=base;
+  ctx.fillText(s, x, y); ctx.restore();
+}
+function wrap(ctx, text, x, y, maxW, lineH, col, font) {
+  ctx.save(); ctx.fillStyle=col; ctx.font=font; ctx.textBaseline='top'; ctx.textAlign='left';
+  let words=text.split(' '), line='', cy=y;
+  for(let i=0;i<words.length;i++){
+    let test=line+words[i]+' ';
+    if(ctx.measureText(test).width>maxW && i>0){ ctx.fillText(line.trim(),x,cy); line=words[i]+' '; cy+=lineH; }
+    else line=test;
+  }
+  ctx.fillText(line.trim(),x,cy); ctx.restore(); return cy;
+}
+
+// ── Top / Bottom bars (shared) ────────────────────────────────
+function topBar(ctx, name, idx) {
+  ctx.save();
+  ctx.fillStyle=C.white; ctx.fillRect(0,0,W,68);
+  ctx.strokeStyle=C.s200; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,68); ctx.lineTo(W,68); ctx.stroke();
+
+  // Logo pill
+  const g=ctx.createLinearGradient(24,16,24,56); g.addColorStop(0,C.sky); g.addColorStop(1,C.teal);
+  ctx.fillStyle=g; rr(ctx,24,16,44,44,10); ctx.fill();
+  txt(ctx,'℞',46,38,'bold 24px serif','#fff','center','middle');
+  txt(ctx,'RxVaani',78,30,'bold 19px Plus Jakarta Sans','#0F172A');
+  txt(ctx,'AI Clinical Prescription Scribe — Gnani AI Prisma v3.0',78,50,'13px Plus Jakarta Sans',C.s500);
+
+  // Right badge
+  const badge=`Scene ${idx+1}/8  •  ${name}`;
+  ctx.font='bold 11px Plus Jakarta Sans';
+  const bw=ctx.measureText(badge).width+22;
+  fillBox(ctx,W-bw-16,20,bw,30,8,C.skyL);
+  strokeBox(ctx,W-bw-16,20,bw,30,8,C.sky,1);
+  txt(ctx,badge,W-bw/2-16,38,'bold 11px Plus Jakarta Sans',C.sky,'center','middle');
+  ctx.restore();
+}
+
+function botBar(ctx, narration, t, dur) {
+  ctx.save();
+  ctx.fillStyle=C.white; ctx.fillRect(0,H-72,W,72);
+  ctx.strokeStyle=C.s200; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,H-72); ctx.lineTo(W,H-72); ctx.stroke();
+  // progress
+  const p=clamp(t/dur,0,1);
+  fillBox(ctx,20,H-14,W-40,6,3,C.s100);
+  if(p>0) fillBox(ctx,20,H-14,(W-40)*p,6,3,C.sky);
+  // caption: show growing word count
+  const words=narration.split(' ');
+  const shown=words.slice(0,Math.min(words.length,Math.floor(p*words.length+1))).join(' ')+(p<0.98?'…':'');
+  txt(ctx,'🎙 '+shown.substring(0,120),20,H-50,'14px Plus Jakarta Sans',C.s600);
+  ctx.restore();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SCENES
+// ══════════════════════════════════════════════════════════════
+
+function scene0(ctx, t, dur) {   // ── Title Card ──
+  const p = p01(t,0,1400);
+  // Soft blue gradient bg
+  const bg=ctx.createLinearGradient(0,68,0,H-72);
+  bg.addColorStop(0,'#F0F9FF'); bg.addColorStop(1,'#DBEAFE');
+  ctx.fillStyle=bg; ctx.fillRect(0,68,W,H-140);
+
+  // giant ℞ watermark
+  ctx.save(); ctx.globalAlpha=0.05; ctx.fillStyle=C.sky;
+  ctx.font='bold 400px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('℞',W/2,H/2+10); ctx.restore();
+
+  ctx.save(); ctx.globalAlpha=p;
+
+  // headline
+  txt(ctx,'RxVaani',W/2,220+(1-p)*30,'bold 72px Plus Jakarta Sans',C.s900,'center');
+
+  const gr=ctx.createLinearGradient(W/2-300,0,W/2+300,0);
+  gr.addColorStop(0,C.sky); gr.addColorStop(.5,C.teal); gr.addColorStop(1,C.indigo);
+  ctx.fillStyle=gr; ctx.font='bold 34px Plus Jakarta Sans'; ctx.textAlign='center';
+  ctx.fillText('AI Clinical Prescription Scribe',W/2,278);
+  txt(ctx,'Built for Indian Healthcare  •  Gnani AI Internship Challenge',W/2,316,'20px Plus Jakarta Sans',C.s500,'center');
+
+  // Stat pills
+  const stats=[['90s','Consult → PDF'],['<400ms','Prisma STT'],['100%','Doctor Control']];
+  const pw=210, ph=68, sx=W/2-((pw+22)*3-22)/2;
+  stats.forEach(([v,l],i)=>{
+    const px=sx+i*(pw+22), py=360;
+    fillBox(ctx,px,py,pw,ph,14,C.white); strokeBox(ctx,px,py,pw,ph,14,C.sky,1.5);
+    txt(ctx,v,px+pw/2,py+34,'bold 30px Plus Jakarta Sans',[C.sky,C.teal,C.emerald][i],'center');
+    txt(ctx,l,px+pw/2,py+56,'12px Plus Jakarta Sans',C.s500,'center');
+  });
+
+  // Challenge badge
+  fillBox(ctx,W/2-240,460,480,36,18,'#F0FFF4'); strokeBox(ctx,W/2-240,460,480,36,18,'#86EFAC',1);
+  txt(ctx,'🏆  Great Indian AI Internship Challenge  •  Gnani AI',W/2,484,'bold 13px Plus Jakarta Sans','#15803D','center','middle');
+  ctx.restore();
+}
+
+function scene1(ctx, t, dur) {   // ── The Problem ──
+  ctx.fillStyle='#FFF7F7'; ctx.fillRect(0,68,W,H-140);
+  const p=p01(t,0,900);
+  ctx.save(); ctx.globalAlpha=p;
+  txt(ctx,'The Crisis in Indian OPDs',52,118,'bold 44px Plus Jakarta Sans',C.s900);
+
+  // animated underline
+  ctx.save(); ctx.strokeStyle=C.rose; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.moveTo(52,132); ctx.lineTo(52+clamp(t/700,0,1)*580,132); ctx.stroke(); ctx.restore();
+
+  const probs=[
+    {icon:'📋',title:'40% Time = Paperwork',desc:'Doctors spend 40% of each consultation just writing prescriptions — 2–3 wasted minutes per patient, every day.',col:C.roseL,bdr:'#FCA5A5'},
+    {icon:'✍️',title:'Illegible Handwriting',desc:'Pharmacy staff misread handwritten Rx daily, causing wrong-drug dispensing and preventable medication errors.',col:'#FFFBEB',bdr:'#FCD34D'},
+    {icon:'🌐',title:'Western STT Fails',desc:'Alexa, Google, Siri — all fail on Hindi-English code-mixing. Indian drug names and dosages come out garbled.',col:'#EEF2FF',bdr:'#A5B4FC'},
+  ];
+  probs.forEach((pr,i)=>{
+    const pp=p01(t,600+i*500,600);
+    if(pp<=0) return;
+    const x=52+i*(386+16), y=158;
+    ctx.globalAlpha=pp;
+    fillBox(ctx,x,y,386,228,16,pr.col); strokeBox(ctx,x,y,386,228,16,pr.bdr,1.5);
+    txt(ctx,pr.icon,x+193,y+58,'38px sans-serif',C.s900,'center');
+    txt(ctx,pr.title,x+193,y+98,'bold 16px Plus Jakarta Sans',C.s900,'center');
+    wrap(ctx,pr.desc,x+18,y+112,350,21,C.s700,'13px Plus Jakarta Sans');
+  });
+
+  // bottom callout
+  const cp=p01(t,2400,600);
+  ctx.globalAlpha=cp;
+  fillBox(ctx,52,418,W-104,66,14,C.skyL); strokeBox(ctx,52,418,W-104,66,14,C.sky,1.5);
+  txt(ctx,'💡  India needs an STT engine built for its own language & culture — that is RxVaani.',W/2,460,'bold 15px Plus Jakarta Sans',C.sky,'center','middle');
+  ctx.restore();
+}
+
+function scene2(ctx, t, dur) {   // ── Solution Flow ──
+  ctx.fillStyle='#F0FAFA'; ctx.fillRect(0,68,W,H-140);
+  const p=p01(t,0,900);
+  ctx.save(); ctx.globalAlpha=p;
+  txt(ctx,'How RxVaani Works — End to End',W/2,118,'bold 42px Plus Jakarta Sans',C.s900,'center');
+
+  const steps=[
+    {icon:'🎙️',label:'Capture',sub:'Hinglish
+ambient audio',col:C.sky},
+    {icon:'📡',label:'Transcribe',sub:'Gnani Prisma
+STT Codemix',col:C.indigo},
+    {icon:'🧬',label:'Extract',sub:'Meds, Diagnosis
+& Instructions',col:C.teal},
+    {icon:'🔍',label:'Verify',sub:'Doctor reviews
+Amber alerts',col:C.amber},
+    {icon:'📄',label:'Generate',sub:'NMC-compliant
+PDF Rx',col:C.emerald},
+  ];
+  const sw=186, sh=190, tot=sw*5+28*4, startX=(W-tot)/2;
+  steps.forEach((s,i)=>{
+    const pp=p01(t,400+i*350,500);
+    if(pp<=0) return;
+    const x=startX+i*(sw+28), y=142;
+    ctx.globalAlpha=pp;
+    fillBox(ctx,x,y,sw,sh,14,C.white); strokeBox(ctx,x,y,sw,sh,14,s.col,2);
+    fillBox(ctx,x,y,sw,8,4,s.col); ctx.fillStyle=s.col; ctx.fillRect(x+8,y,sw-16,8);
+    txt(ctx,s.icon,x+sw/2,y+66,'36px sans-serif',s.col,'center');
+    txt(ctx,s.label,x+sw/2,y+100,'bold 15px Plus Jakarta Sans',C.s900,'center');
+    s.sub.split('
+').forEach((ln,li)=> txt(ctx,ln,x+sw/2,y+120+li*18,'11px Plus Jakarta Sans',C.s500,'center'));
+    if(i<4){ ctx.fillStyle=C.s300; ctx.font='bold 22px sans-serif'; ctx.textAlign='left'; ctx.fillText('→',x+sw+5,y+sh/2+8); }
+  });
+
+  const cp=p01(t,2500,600);
+  ctx.globalAlpha=cp;
+  fillBox(ctx,W/2-290,370,580,62,16,C.skyL); strokeBox(ctx,W/2-290,370,580,62,16,C.sky,1.5);
+  txt(ctx,'⏱  Full workflow: Audio → Verified Prescription PDF in under 90 seconds',W/2,408,'bold 16px Plus Jakarta Sans',C.sky,'center','middle');
+  ctx.restore();
+}
+
+function scene3(ctx, t, dur) {   // ── Gnani Prisma STT ──
+  ctx.fillStyle='#F0F4FF'; ctx.fillRect(0,68,W,H-140);
+  const p=p01(t,0,900);
+  ctx.save(); ctx.globalAlpha=p;
+  txt(ctx,'Gnani AI Prisma STT v3.0',52,118,'bold 42px Plus Jakarta Sans',C.s900);
+  txt(ctx,'Codemix ASR — Sub-400ms latency — Hindi × English',52,146,'15px Plus Jakarta Sans',C.indigo);
+
+  // Terminal
+  const tp=p01(t,350,700);
+  ctx.globalAlpha=tp;
+  fillBox(ctx,52,165,590,290,14,'#1E1E2E'); strokeBox(ctx,52,165,590,290,14,C.indigo,1.5);
+  fillBox(ctx,52,165,590,32,10,'#2D2B55'); ctx.fillStyle='#2D2B55'; ctx.fillRect(52,185,590,12);
+  ['#FF5F57','#FFBD2E','#28CA41'].forEach((c,i)=>{ ctx.fillStyle=c; rr(ctx,70+i*20,174,12,12,6); ctx.fill(); });
+  txt(ctx,'api.vachana.ai/stt/v3  –  X-API-Key-ID: ••••',332,195,'11px JetBrains Mono','#8B8FA8','center');
+
+  const lines=[
+    {tag:'Patient:',  tc:'#79C0FF', rest:' Namaste doctor sahab, teen din se tez bukhar hai...'},
+    {tag:'Doctor:',   tc:'#56D364', rest:' Thik hai. Temperature 101. Paracetamol 650mg subah shaam.'},
+    {tag:'',          tc:'#C9D1D9', rest:' Azithromycin 500mg, ek goli roz teen din tak.'},
+    {tag:'[Prisma]',  tc:'#E2B340', rest:' format=codemix | lang=hi-IN,en-IN'},
+    {tag:'[Conf]',    tc:'#56D364', rest:' Paracetamol 650mg → 98.4%  |  Azithromycin 500mg → 96.1%'},
+    {tag:'[Match]',   tc:'#79C0FF', rest:' Levenshtein fuzzy: "paras tamol" → "Paracetamol" ✓'},
+  ];
+  ctx.font='13px JetBrains Mono'; ctx.textAlign='left';
+  lines.forEach((ln,i)=>{
+    const lp=p01(t,500+i*210,280);
+    if(lp<=0) return;
+    const lx=72, ly=210+i*32;
+    ctx.save(); ctx.globalAlpha=tp*lp;
+    if(ln.tag){ ctx.fillStyle=ln.tc; ctx.fillText(ln.tag,lx,ly); }
+    ctx.fillStyle='#C9D1D9';
+    ctx.fillText(ln.rest, lx+(ln.tag?ctx.measureText(ln.tag).width:0), ly);
+    ctx.restore();
+  });
+
+  // Right spec cards
+  const sp=p01(t,500,600);
+  ctx.globalAlpha=sp;
+  const specs=[
+    {k:'API Endpoint', v:'api.vachana.ai/stt/v3', c:C.indigo},
+    {k:'Auth Header',  v:'X-API-Key-ID',           c:C.sky},
+    {k:'Mode',         v:'codemix (Hindi + English)',c:C.teal},
+    {k:'Languages',    v:'hi-IN, en-IN',            c:C.emerald},
+    {k:'Latency',      v:'< 400 milliseconds',      c:C.amber},
+    {k:'Drug Accuracy',v:'96 – 99 % on brand names',c:C.emerald},
+  ];
+  specs.forEach((sp2,i)=>{
+    const pp=p01(t,700+i*100,350);
+    const sx=665, sy=165+i*50;
+    ctx.globalAlpha=sp*pp;
+    fillBox(ctx,sx,sy,567,42,10,C.white); strokeBox(ctx,sx,sy,567,42,10,sp2.c,1.5);
+    txt(ctx,sp2.k.toUpperCase(),sx+14,sy+13,'10px Plus Jakarta Sans',C.s500,'left','top');
+    txt(ctx,sp2.v,sx+14,sy+28,'bold 14px Plus Jakarta Sans',sp2.c);
+  });
+  ctx.restore();
+}
+
+function scene4(ctx, t, dur) {   // ── Extraction + Fuzzy ──
+  ctx.fillStyle='#F0FAFA'; ctx.fillRect(0,68,W,H-140);
+  const p=p01(t,0,900);
+  ctx.save(); ctx.globalAlpha=p;
+  txt(ctx,'Clinical Entity Extraction',52,118,'bold 42px Plus Jakarta Sans',C.s900);
+  txt(ctx,'50+ Indian Pharma Formulary  •  Levenshtein Fuzzy Matching',52,146,'15px Plus Jakarta Sans',C.teal);
+
+  const meds=[
+    {name:'Paracetamol 650 mg',f:'1-0-1 (BD)',d:'3 Days',r:'Oral, After Meals',conf:98.4,col:C.sky},
+    {name:'Azithromycin 500 mg',f:'1-0-0 (OD)',d:'3 Days',r:'Oral, After Meals',conf:96.1,col:C.teal},
+    {name:'Pantoprazole 40 mg',f:'1-0-0 (OD)',d:'5 Days',r:'Oral, Empty Stomach',conf:94.2,col:C.indigo},
+  ];
+  meds.forEach((m,i)=>{
+    const pp=p01(t,500+i*450,500);
+    if(pp<=0) return;
+    const mx=52+i*(388+16), my=165;
+    ctx.globalAlpha=pp;
+    fillBox(ctx,mx,my,388,210,16,C.white); strokeBox(ctx,mx,my,388,210,16,m.col,2);
+    fillBox(ctx,mx+12,my+12,96,22,11,m.col+'22');
+    txt(ctx,`Tab #${i+1}`,mx+60,my+27,'bold 10px Plus Jakarta Sans',m.col,'center','middle');
+    txt(ctx,m.name,mx+14,my+56,'bold 19px Plus Jakarta Sans',C.s900);
+    [['Freq:',m.f],['Duration:',m.d],['Route:',m.r]].forEach(([k,v],j)=>{
+      txt(ctx,k,mx+14,my+88+j*22,'12px Plus Jakarta Sans',C.s500);
+      txt(ctx,v,mx+86,my+88+j*22,'bold 12px Plus Jakarta Sans',m.col);
+    });
+    // confidence bar
+    fillBox(ctx,mx+14,my+184,360,8,4,C.s100);
+    fillBox(ctx,mx+14,my+184,360*(m.conf/100),8,4,m.col);
+    txt(ctx,m.conf+'% conf',mx+374,my+180,'bold 11px Plus Jakarta Sans',m.col,'right');
+  });
+
+  const fp=p01(t,2200,600);
+  ctx.globalAlpha=fp;
+  fillBox(ctx,52,406,W-104,54,14,C.emeraldL); strokeBox(ctx,52,406,W-104,54,14,C.emerald,1);
+  txt(ctx,'🔍  Levenshtein fuzzy match corrects ASR errors — "paras tamol" → "Paracetamol" (97% accuracy)',W/2,440,'bold 14px Plus Jakarta Sans',C.emerald,'center','middle');
+  ctx.restore();
+}
+
+function scene5(ctx, t, dur) {   // ── Safety Guardrails ──
+  ctx.fillStyle='#FFFDF5'; ctx.fillRect(0,68,W,H-140);
+  const p=p01(t,0,900);
+  ctx.save(); ctx.globalAlpha=p;
+  txt(ctx,'"AI Drafts — Doctor Decides"',52,118,'bold 42px Plus Jakarta Sans',C.s900);
+  txt(ctx,'Zero Autonomous Prescriptions  •  Amber Uncertainty Badges  •  NMC Compliant',52,146,'14px Plus Jakarta Sans',C.amber);
+
+  // Amber alert box
+  const ap=p01(t,500,600);
+  ctx.globalAlpha=ap;
+  fillBox(ctx,52,165,870,100,16,C.amberL); strokeBox(ctx,52,165,870,100,16,C.amber,2);
+  txt(ctx,'⚠️  AMBER FLAG — Clinician Review Required Before Sign-Off',76,198,'bold 17px Plus Jakarta Sans',C.amber);
+  wrap(ctx,'Azithromycin duration extracted as "3 days" from speech. Standard therapy is 3–5 days. Doctor must confirm dosage and duration before the prescription is finalized.',76,218,800,20,'#78350F','13px Plus Jakarta Sans');
+
+  const cards=[
+    {icon:'🩺',title:'Interactive Prescription Pad',
+     body:'Doctor taps to edit any medicine, dosage, frequency or route. Flagged rows stay locked until explicitly approved. Zero autonomous prescriptions issued.',
+     col:C.sky},
+    {icon:'✅',title:'Digital Seal & Audit Trail',
+     body:'Signed Rx stores doctor name, MCI registration number, UTC timestamp and AI confidence scores — full NMC Telemedicine Act compliance.',
+     col:C.emerald},
+  ];
+  cards.forEach((c,i)=>{
+    const cp=p01(t,900+i*400,500);
+    if(cp<=0) return;
+    const cx=52+i*(572+32), cy=290;
+    ctx.globalAlpha=cp;
+    fillBox(ctx,cx,cy,572,166,14,C.white); strokeBox(ctx,cx,cy,572,166,14,c.col,1.5);
+    txt(ctx,c.icon,cx+18,cy+52,'28px sans-serif',c.col,'left','middle');
+    txt(ctx,c.title,cx+58,cy+42,'bold 17px Plus Jakarta Sans',C.s900);
+    wrap(ctx,c.body,cx+18,cy+68,528,21,C.s600,'13px Plus Jakarta Sans');
+  });
+  ctx.restore();
+}
+
+function scene6(ctx, t, dur) {   // ── PDF Prescription ──
+  ctx.fillStyle='#F0FFF8'; ctx.fillRect(0,68,W,H-140);
+  const p=p01(t,0,900);
+  ctx.save(); ctx.globalAlpha=p;
+  txt(ctx,'Instant NMC-Compliant PDF Prescription',52,118,'bold 38px Plus Jakarta Sans',C.s900);
+  txt(ctx,'ReportLab Engine  •  Clinic Letterhead  •  One-Click Export',52,146,'14px Plus Jakarta Sans',C.emerald);
+
+  // PDF mockup
+  const pp=p01(t,450,800);
+  ctx.globalAlpha=pp;
+  const [px,py,pw,ph]=[52,164,540,296];
+  ctx.shadowColor='rgba(0,0,0,0.12)'; ctx.shadowBlur=18; ctx.shadowOffsetY=5;
+  fillBox(ctx,px,py,pw,ph,8,C.white);
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0;
+  strokeBox(ctx,px,py,pw,ph,8,C.s300,1);
+
+  // Header strip
+  fillBox(ctx,px,py,pw,50,8,C.sky); ctx.fillStyle=C.sky; ctx.fillRect(px+8,py+32,pw-16,18);
+  txt(ctx,'Aarogya Clinic & Diagnostics',px+14,py+22,'bold 15px Plus Jakarta Sans',C.white);
+  txt(ctx,'Dr. Vedant Sharma, MBBS, MD  •  MCI-Reg: 84920/2019  •  New Delhi',px+14,py+40,'10px Plus Jakarta Sans',C.white);
+  txt(ctx,'PRESCRIPTION',px+pw-14,py+28,'bold 11px Plus Jakarta Sans',C.white,'right');
+
+  fillBox(ctx,px+8,py+58,pw-16,26,5,C.s100);
+  txt(ctx,'Patient: Ramesh Patel  |  42/M  |  OPD-2026-9482  |  Date: Today',px+16,py+76,'11px Plus Jakarta Sans',C.s700);
+  txt(ctx,'℞',px+16,py+120,'bold 36px serif',C.sky);
+
+  ['1.  Tab. Paracetamol 650mg  —  1-0-1  •  3 Days  •  After Meals',
+   '2.  Tab. Azithromycin 500mg  —  1-0-0  •  3 Days  •  After Meals',
+   '3.  Cap. Pantoprazole 40mg  —  1-0-0  •  5 Days  •  Empty Stomach',
+  ].forEach((rx,i)=>{
+    const mp=p01(t,800+i*200,350);
+    ctx.globalAlpha=pp*mp;
+    txt(ctx,rx,px+52,py+136+i*32,'bold 12px Plus Jakarta Sans',C.s900);
+    ctx.strokeStyle=C.s200; ctx.lineWidth=0.8;
+    ctx.beginPath(); ctx.moveTo(px+52,py+144+i*32); ctx.lineTo(px+pw-14,py+144+i*32); ctx.stroke();
+  });
+  ctx.globalAlpha=pp;
+  txt(ctx,'⚠ AI-generated draft. Authorised by physician.',px+14,py+ph-26,'italic 10px Plus Jakarta Sans',C.s500);
+  txt(ctx,'Dr. Vedant Sharma',px+pw-14,py+ph-12,'bold 11px Plus Jakarta Sans',C.s700,'right');
+  ctx.strokeStyle=C.s400; ctx.lineWidth=0.8;
+  ctx.beginPath(); ctx.moveTo(px+pw-176,py+ph-16); ctx.lineTo(px+pw-14,py+ph-16); ctx.stroke();
+
+  // Right bullets
+  const feats=[
+    '✅  Clinic Letterhead & Doctor Registration',
+    '✅  Structured Medicines Table (1-0-1 format)',
+    '✅  AI Legal Disclaimer (NMC Telemedicine)',
+    '✅  Doctor Digital Signature Block',
+    '✅  One-click PDF download — instant patient copy',
+    '📥  Rename .webm → .mp4 to play everywhere',
+  ];
+  const fp2=p01(t,700,600);
+  feats.forEach((f,i)=>{
+    const fp3=p01(t,800+i*170,380);
+    ctx.globalAlpha=fp2*fp3;
+    txt(ctx,f,614,180+i*42,'14px Plus Jakarta Sans',C.s800);
+  });
+  ctx.restore();
+}
+
+function scene7(ctx, t, dur) {   // ── Architecture & CTA ──
+  ctx.fillStyle='#F8FAFC'; ctx.fillRect(0,68,W,H-140);
+  const p=p01(t,0,900);
+  ctx.save(); ctx.globalAlpha=p;
+  txt(ctx,'Architecture & Production Readiness',W/2,118,'bold 40px Plus Jakarta Sans',C.s900,'center');
+
+  const techs=[
+    {icon:'⚡',name:'FastAPI',sub:'Python 3.13
+REST Backend',col:C.sky},
+    {icon:'☕',name:'Spring Boot',sub:'Java 21
+Enterprise Layer',col:'#C65F02'},
+    {icon:'🧠',name:'Gemini Flash',sub:'LLM Clinical
+Extraction',col:C.indigo},
+    {icon:'🔊',name:'Gnani Prisma',sub:'Codemix STT
+v3.0',col:C.teal},
+    {icon:'📄',name:'ReportLab',sub:'PDF Engine
+NMC Compliant',col:C.emerald},
+  ];
+  const tw=196,th=158,tot=tw*5+22*4,sx2=(W-tot)/2;
+  techs.forEach((tc,i)=>{
+    const pp=p01(t,400+i*300,500);
+    if(pp<=0) return;
+    const tx=sx2+i*(tw+22), ty=140;
+    ctx.globalAlpha=pp;
+    fillBox(ctx,tx,ty,tw,th,14,C.white); strokeBox(ctx,tx,ty,tw,th,14,tc.col,2);
+    txt(ctx,tc.icon,tx+tw/2,ty+50,'34px sans-serif',tc.col,'center');
+    txt(ctx,tc.name,tx+tw/2,ty+78,'bold 15px Plus Jakarta Sans',C.s900,'center');
+    tc.sub.split('
+').forEach((ln,li)=> txt(ctx,ln,tx+tw/2,ty+98+li*17,'11px Plus Jakarta Sans',C.s500,'center'));
+  });
+
+  // Pages row
+  const pp2=p01(t,2000,600);
+  ctx.globalAlpha=pp2;
+  txt(ctx,'7 Route-Served Pages',W/2,332,'bold 13px Plus Jakarta Sans',C.s600,'center');
+  ['/home','/consultation','/studio','/prescription','/records','/settings','/video'].forEach((pg,i)=>{
+    const bx=W/2-((112+8)*7-8)/2+i*(112+8);
+    fillBox(ctx,bx,342,112,28,8,C.skyL); strokeBox(ctx,bx,342,112,28,8,C.sky,1);
+    txt(ctx,pg,bx+56,360,'bold 10px JetBrains Mono',C.sky,'center','middle');
+  });
+
+  // CTA
+  const cp=p01(t,2600,600);
+  ctx.globalAlpha=cp;
+  fillBox(ctx,W/2-310,398,620,66,20,C.sky);
+  txt(ctx,'🚀  RxVaani — Transforming India's Clinical Future',W/2,438,'bold 22px Plus Jakarta Sans',C.white,'center','middle');
+  ctx.restore();
+}
+
+// ── Scene manifest ────────────────────────────────────────────
+const SCENES = [
+  {id:0,name:'Title Card',      dur:5500, draw:scene0,
+   narr:'Welcome to RxVaani — the AI-powered clinical prescription scribe built for Indian healthcare. Developed for the Great Indian AI Internship Challenge, powered by Gnani AI.'},
+  {id:1,name:'The Problem',     dur:7000, draw:scene1,
+   narr:'Indian doctors examine up to 80 patients daily. Over 40 percent of consultation time is wasted writing prescriptions by hand. Illegible handwriting causes dangerous pharmacy errors, and Western voice tools completely fail on Hindi and Hinglish speech.'},
+  {id:2,name:'Solution Flow',   dur:6000, draw:scene2,
+   narr:'RxVaani solves this end to end. It listens to natural Hindi and Hinglish doctor-patient conversations, transcribes them in real time using Gnani AI Prisma, extracts clinical entities, and generates a verified prescription — all in under 90 seconds.'},
+  {id:3,name:'Gnani Prisma STT',dur:7000, draw:scene3,
+   narr:'At the deep-tech core is Gnani AI Prisma version 3, a state-of-the-art speech-to-text engine built for Indian code-mixed speech. Using the codemix API in format codemix, it perfectly handles Hindi-English mixing, preserving drug names and dosages with sub-400 millisecond latency.'},
+  {id:4,name:'Extraction',      dur:7000, draw:scene4,
+   narr:"RxVaani's clinical AI engine extracts chief complaints, vital signs, diagnosis, and medications. A fuzzy matching algorithm cross-references extracted drug names against a curated Indian formulary of over 50 pharmaceuticals using Levenshtein distance matching."},
+  {id:5,name:'Safety',          dur:7000, draw:scene5,
+   narr:"Patient safety is paramount. RxVaani follows a strict rule — AI drafts, Doctor decides. The system never prescribes autonomously. Amber badges highlight uncertain dosages. Doctors review, edit, and digitally authorize every medicine before the prescription is finalized."},
+  {id:6,name:'PDF Prescription',dur:6000, draw:scene6,
+   narr:'With a single click, an official NMC-compliant prescription PDF is generated — complete with clinic letterhead, doctor registration, structured medicine tables, and a legal AI disclaimer. Ready to print or share digitally with the patient.'},
+  {id:7,name:'Architecture',    dur:6000, draw:scene7,
+   narr:"RxVaani is built on a FastAPI Python backend with an optional Java Spring Boot enterprise layer. A clean multi-page web interface covers every clinical workflow — from OPD intake to voice studio to digital prescription. RxVaani — transforming India's clinical future, one consultation at a time."},
+];
+const TOTAL_DUR = SCENES.reduce((a,s)=>a+s.dur,0);
+
+// ── Idle screen ───────────────────────────────────────────────
+function idleScreen(){
+  const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+  ctx.fillStyle='#F8FAFC'; ctx.fillRect(0,0,W,H);
+  const g=ctx.createLinearGradient(W/2-240,H/2-70,W/2+240,H/2+70);
+  g.addColorStop(0,C.sky); g.addColorStop(1,C.teal);
+  ctx.fillStyle=g; rr(ctx,W/2-240,H/2-70,480,120,22); ctx.fill();
+  txt(ctx,'🎬  Click "Generate & Download Video"',W/2,H/2-10,'bold 26px Plus Jakarta Sans',C.white,'center','middle');
+  txt(ctx,'Full-HD 1280×720 animated Canvas video — ~3 minutes to render',W/2,H/2+34,'15px Plus Jakarta Sans',C.white,'center','middle');
+}
+
+// ── Voice ─────────────────────────────────────────────────────
+function loadVoices(){
+  return new Promise(res=>{
+    const all=speechSynthesis.getVoices();
+    if(all.length>0){pickV(all);res();return;}
+    speechSynthesis.onvoiceschanged=()=>{pickV(speechSynthesis.getVoices());res();};
+  });
+}
+function pickV(all){
+  const try1=v=>all.find(x=>x.lang==='en-US'&&x.name.toLowerCase().includes(v));
+  selectedVoice=try1('natural')||try1('jenny')||try1('guy')||try1('aria')||
+    all.find(x=>x.lang==='en-US')||all.find(x=>x.lang.startsWith('en'))||all[0];
+}
+function speak(text){
+  return new Promise(res=>{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=0.94; u.pitch=1.0;
+    if(selectedVoice) u.voice=selectedVoice;
+    u.onend=res; u.onerror=res;
+    speechSynthesis.speak(u);
+  });
+}
+
+// ── Status helpers ────────────────────────────────────────────
+function setSt(txt2,pct,sub){
+  document.getElementById('stTxt').textContent=txt2;
+  document.getElementById('stPct').textContent=pct+'%';
+  document.getElementById('pBar').style.width=pct+'%';
+  document.getElementById('stSub').textContent=sub;
+}
+
+// ── Main generation loop ──────────────────────────────────────
+async function startGeneration(){
+  if(animRunning){alert('Already rendering! Click Stop first.');return;}
+  animRunning=true; stopReq=false;
+  document.getElementById('statusBar').classList.remove('hidden');
+  document.getElementById('spinner').classList.remove('hidden');
+  setSt('Loading voices…',0,'Initializing American English TTS…');
+  await loadVoices();
+
+  const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+  const stream=cv.captureStream(30);
+  let mime='video/webm;codecs=vp9';
+  if(!MediaRecorder.isTypeSupported(mime)) mime='video/webm';
+  chunks=[];
+  recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4_000_000});
+  recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+  recorder.onstop=()=>downloadVid();
+  recorder.start(100);
+  setSt('Recording started',2,'Rendering animated scenes…');
+
+  for(let si=0;si<SCENES.length;si++){
+    if(stopReq) break;
+    const sc=SCENES[si];
+    document.getElementById('sceneLabel').textContent=`Scene ${si+1} / ${SCENES.length}: ${sc.name}`;
+    const speakP=speak(sc.narr);  // fire narration asynchronously
+    const t0=performance.now();
+    while(true){
+      if(stopReq) break;
+      const elapsed=performance.now()-t0;
+      ctx.clearRect(0,0,W,H); ctx.fillStyle=C.white; ctx.fillRect(0,0,W,H);
+      topBar(ctx,sc.name,si);
+      sc.draw(ctx,elapsed,sc.dur);
+      botBar(ctx,sc.narr,elapsed,sc.dur);
+      let done=SCENES.slice(0,si).reduce((a,x)=>a+x.dur,0)+elapsed;
+      const ovPct=Math.round(clamp(done/TOTAL_DUR,0,1)*100);
+      setSt(`Scene ${si+1}/${SCENES.length}: ${sc.name}`,ovPct,`${ovPct}% — "${sc.name}"`);
+      if(elapsed>=sc.dur) break;
+      await new Promise(r=>setTimeout(r,33));
+    }
+    await speakP;
+    await new Promise(r=>setTimeout(r,300));
+  }
+
+  speechSynthesis.cancel();
+  if(recorder.state!=='inactive') recorder.stop();
+  animRunning=false;
+  document.getElementById('spinner').classList.add('hidden');
+  setSt('Done! Saving video…',100,'Check your Downloads folder for RxVaani-Video.webm');
+}
+
+function stopGeneration(){
+  stopReq=true; animRunning=false;
+  speechSynthesis.cancel();
+  if(recorder&&recorder.state!=='inactive') recorder.stop();
+  document.getElementById('spinner').classList.add('hidden');
+  setSt('Stopped — partial video may save.',0,'');
+  idleScreen();
+}
+
+function downloadVid(){
+  const blob=new Blob(chunks,{type:'video/webm'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='RxVaani-Animated-Explainer.webm';
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},600);
+  setSt('✅ Video saved!',100,'Open RxVaani-Animated-Explainer.webm in VLC or Chrome. Rename to .mp4 if needed.');
+}
+</script>
+</body>
+</html>

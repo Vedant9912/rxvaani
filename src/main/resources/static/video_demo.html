@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RxVaani - Detailed Video Presentation & Demo (American English Voiceover)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/static/navbar.js"></script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #0F172A; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Crisp Light Panels */
+    .light-panel {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+    }
+    
+    .light-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 2px 8px -1px rgba(15, 23, 42, 0.04);
+    }
+
+    /* Video Screen 16:9 Aspect Ratio on Pure White */
+    .video-viewport {
+      aspect-ratio: 16 / 9;
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.25rem;
+      background: #FFFFFF;
+      border: 2px solid #E2E8F0;
+      box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(226, 232, 240, 0.8);
+    }
+
+    /* Vibrant Medical Audio Wave */
+    @keyframes wave-pulse {
+      0%, 100% { height: 10px; opacity: 0.7; }
+      50% { height: 48px; opacity: 1; }
+    }
+    .wave-bar {
+      width: 5px;
+      border-radius: 9999px;
+      background: linear-gradient(to top, #0284C7, #0D9488);
+      animation: wave-pulse 1.1s ease-in-out infinite;
+    }
+
+    /* Smooth Scene Transitions */
+    .scene-fade-in {
+      animation: fadeInScene 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeInScene {
+      from { opacity: 0; transform: translateY(10px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    input[type=range] {
+      accent-color: #0284C7;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#F8FAFC]">
+
+  <!-- Global Navbar -->
+  <div id="navbar-container"></div>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Header & Pitch Ribbon (Light Theme) -->
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-3 border-b border-slate-200">
+      <div>
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold mb-2 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-sky-500 animate-ping"></span>
+          <span>Great Indian AI Internship Challenge • Gnani AI Demo Showcase</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+          <span>RxVaani Video Showcase</span>
+          <span class="text-xs px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 font-mono font-bold flex items-center gap-1.5">
+            <span>🇺🇸 American English Voiceover</span>
+            <span>• 7 Scenes</span>
+          </span>
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+          Cinematic walkthrough explaining the OPD challenge, Gnani Prisma STT codemixing, 50+ medicine fuzzy matching, clinician safety guardrails, and NMC PDF export.
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-3">
+        <button id="btn-record-video" onclick="toggleVideoRecording()" class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-md shadow-red-600/20 transition flex items-center space-x-2">
+          <span id="record-dot" class="w-2.5 h-2.5 rounded-full bg-white"></span>
+          <span id="record-btn-text">🔴 Record & Download Video (.webm)</span>
+        </button>
+        <button onclick="toggleFullscreen()" class="px-3.5 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs shadow-xs transition flex items-center space-x-1.5" title="Full Screen (F)">
+          <span>⛶</span>
+          <span class="hidden sm:inline">Fullscreen</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- VIDEO PLAYER MAIN CONTAINER (Crisp White Stage) -->
+    <div class="light-panel rounded-2xl p-4 sm:p-6 space-y-4">
+
+      <!-- 16:9 VIDEO STAGE (Pure White Background) -->
+      <div id="video-stage" class="video-viewport text-slate-900 flex flex-col justify-between p-6 sm:p-10 select-none">
+
+        <!-- Top Stage Banner (Watermark & Active Scene Badge) -->
+        <div class="flex items-center justify-between z-10 pb-2">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-teal-500 flex items-center justify-center text-white font-black text-xl shadow-md shadow-sky-500/20">
+              ℞
+            </div>
+            <div>
+              <div class="text-sm font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+                <span>RxVaani</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700 font-mono font-bold">
+                  Gnani Prisma STT v3.0
+                </span>
+              </div>
+              <span class="text-[11px] text-slate-500 font-medium">AI Clinical EHR & Prescription Scribe</span>
+            </div>
+          </div>
+
+          <!-- Scene Tag -->
+          <div class="flex items-center space-x-2">
+            <div id="recording-live-indicator" class="hidden items-center space-x-1.5 px-2.5 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-mono font-bold animate-pulse">
+              <span class="w-2 h-2 rounded-full bg-red-600"></span>
+              <span>REC 1080p</span>
+            </div>
+            <div id="scene-counter-badge" class="px-3 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono font-bold shadow-2xs">
+              Scene 1 of 7
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTER STAGE DYNAMIC SCENE CONTAINER -->
+        <div id="scene-container" class="my-auto py-2 z-10 w-full max-w-5xl mx-auto scene-fade-in">
+          <!-- Dynamically injected via JavaScript -->
+        </div>
+
+        <!-- BOTTOM STAGE: SUBTITLES & CAPTIONS -->
+        <div class="z-10 w-full max-w-4xl mx-auto text-center space-y-2 pt-2">
+          <!-- CC Subtitle Bar -->
+          <div class="inline-block px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs sm:text-sm font-medium shadow-md max-w-3xl">
+            <span class="text-sky-600 font-bold mr-1">🎙️ American English Voiceover:</span>
+            <span id="subtitle-text" class="text-slate-700">
+              Welcome to RxVaani, an intelligent clinical prescription scribe built for Indian healthcare.
+            </span>
+          </div>
+        </div>
+
+        <!-- Subtle Background Accent Shapes -->
+        <div class="absolute -top-32 -left-32 w-80 h-80 rounded-full bg-sky-100/50 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-teal-100/40 blur-3xl pointer-events-none"></div>
+
+      </div>
+
+      <!-- VIDEO CONTROLLER / SCRUBBER -->
+      <div class="space-y-3 pt-2">
+        
+        <!-- Timeline Progress Bar -->
+        <div class="relative w-full h-2.5 bg-slate-200 rounded-full cursor-pointer overflow-hidden group" onclick="seekByClick(event)">
+          <div id="video-progress" class="h-full bg-gradient-to-r from-sky-600 via-teal-500 to-indigo-600 rounded-full transition-all duration-300 w-0"></div>
+        </div>
+
+        <!-- Controls Row -->
+        <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-700">
+          
+          <!-- Left: Play/Pause/Prev/Next -->
+          <div class="flex items-center space-x-2">
+            <button id="btn-play" onclick="togglePlay()" class="w-10 h-10 rounded-xl bg-sky-600 hover:bg-sky-500 text-white flex items-center justify-center font-bold text-sm shadow-sm transition">
+              <span id="play-icon">▶</span>
+            </button>
+            <button onclick="prevScene()" class="w-9 h-9 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center transition shadow-2xs" title="Previous Scene (Left Arrow)">
+              ⏮
+            </button>
+            <button onclick="nextScene()" class="w-9 h-9 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center transition shadow-2xs" title="Next Scene (Right Arrow)">
+              ⏭
+            </button>
+            <button onclick="restartVideo()" class="w-9 h-9 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center transition shadow-2xs" title="Restart from Beginning">
+              ↺
+            </button>
+
+            <!-- Time Display -->
+            <div class="font-mono text-slate-500 pl-2">
+              <span id="current-time-display" class="text-slate-900 font-bold">00:00</span> / <span id="total-time-display">02:15</span>
+            </div>
+          </div>
+
+          <!-- Middle: Scene Pills -->
+          <div class="hidden lg:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+            <button onclick="jumpToScene(0)" class="scene-pill px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 transition">1. Intro</button>
+            <button onclick="jumpToScene(1)" class="scene-pill px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 transition">2. Problem</button>
+            <button onclick="jumpToScene(2)" class="scene-pill px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 transition">3. Audio Intake</button>
+            <button onclick="jumpToScene(3)" class="scene-pill px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 transition">4. Gnani Prisma</button>
+            <button onclick="jumpToScene(4)" class="scene-pill px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 transition">5. Extraction</button>
+            <button onclick="jumpToScene(5)" class="scene-pill px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 transition">6. Safety</button>
+            <button onclick="jumpToScene(6)" class="scene-pill px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 transition">7. PDF & Deploy</button>
+          </div>
+
+          <!-- Right: Audio Voiceover Options (American English Focused) -->
+          <div class="flex items-center space-x-3">
+            <!-- Voice Selector -->
+            <div class="flex items-center space-x-1.5">
+              <span class="text-slate-600 text-[11px] font-bold">🇺🇸 Voice:</span>
+              <select id="voice-select" onchange="changeVoice()" class="bg-white border border-slate-300 text-slate-800 text-xs rounded-lg px-2 py-1 focus:outline-none focus:border-sky-500 max-w-[170px] truncate shadow-2xs font-medium">
+                <!-- Populated dynamically with American English en-US voices -->
+              </select>
+            </div>
+
+            <!-- Voice Speed -->
+            <div class="flex items-center space-x-1.5">
+              <span class="text-slate-600 text-[11px] font-bold">Speed:</span>
+              <select id="voice-speed" onchange="changeSpeed()" class="bg-white border border-slate-300 text-slate-800 text-xs rounded-lg px-1.5 py-1 focus:outline-none shadow-2xs font-medium">
+                <option value="0.9">0.9x</option>
+                <option value="1.0" selected>1.0x (Normal)</option>
+                <option value="1.1">1.1x</option>
+                <option value="1.2">1.2x</option>
+              </select>
+            </div>
+
+            <!-- Mute Voice Button -->
+            <button id="btn-mute" onclick="toggleMute()" class="p-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition shadow-2xs" title="Mute/Unmute Narration">
+              🔊
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- VIDEO DOWNLOAD & RECORDER STATUS BANNER -->
+    <div id="recording-toast" class="hidden light-panel border-2 border-red-400 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-red-50">
+      <div class="flex items-center space-x-3">
+        <span class="w-3.5 h-3.5 rounded-full bg-red-600 animate-ping"></span>
+        <div>
+          <h4 class="text-sm font-bold text-red-900">Recording Video In Progress...</h4>
+          <p class="text-xs text-red-700">The showcase is playing through automatically while capturing the high-definition canvas. When finished, your video will download to your PC.</p>
+        </div>
+      </div>
+      <button onclick="stopVideoRecording()" class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-sm">
+        ⏹ Stop & Save Video Now
+      </button>
+    </div>
+
+    <!-- DETAILED NARRATION SCRIPT & SLIDE BREAKDOWN -->
+    <section class="light-panel rounded-2xl p-6 space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span>📜 American English Voiceover Script</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-sky-50 border border-sky-200 text-sky-700 font-mono font-bold">
+              Timecoded Storyboard
+            </span>
+          </h3>
+          <p class="text-xs text-slate-500">Professional American English script synchronized with each slide. You can copy this script directly for presentation submissions.</p>
+        </div>
+        <button onclick="copyFullScript()" class="px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-sky-700 border border-slate-300 text-xs font-bold transition flex items-center space-x-1.5 shadow-2xs">
+          <span>📋</span>
+          <span id="copy-btn-text">Copy Full Script</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        
+        <!-- Scene 1 Script Card -->
+        <div class="light-card p-4 rounded-xl space-y-2 hover:border-sky-400 transition">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-700">Scene 1 • 0:00 - 0:18</span>
+            <span class="text-[10px] text-slate-500 font-mono">Introduction & Vision</span>
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            "Welcome to RxVaani, an intelligent clinical prescription scribe engineered specifically for the Indian healthcare ecosystem, developed for the Great Indian AI Internship Challenge powered by Gnani AI. Our mission is to transform ambient doctor-patient consultations into fully structured, verified digital prescriptions in under ninety seconds."
+          </p>
+        </div>
+
+        <!-- Scene 2 Script Card -->
+        <div class="light-card p-4 rounded-xl space-y-2 hover:border-sky-400 transition">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-700">Scene 2 • 0:18 - 0:38</span>
+            <span class="text-[10px] text-slate-500 font-mono">The OPD Dilemma</span>
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            "In busy Indian outpatient departments, a doctor examines up to eighty patients every single day. Doctors spend over forty percent of their consultation time writing or typing prescriptions. Illegible handwriting frequently causes dangerous dispensing errors in pharmacies, while existing Western voice tools fail completely on Indian code-mixed speech."
+          </p>
+        </div>
+
+        <!-- Scene 3 Script Card -->
+        <div class="light-card p-4 rounded-xl space-y-2 hover:border-sky-400 transition">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-700">Scene 3 • 0:38 - 0:58</span>
+            <span class="text-[10px] text-slate-500 font-mono">Ambient Audio Intake</span>
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            "RxVaani solves this seamlessly. It captures ambient doctor-patient conversations through clinic microphones or telephonic audio streams. Patients and doctors speak naturally in Hindi and Hinglish, expressing symptoms, duration, and medication plans without altering their natural clinical dialogue."
+          </p>
+        </div>
+
+        <!-- Scene 4 Script Card -->
+        <div class="light-card p-4 rounded-xl space-y-2 hover:border-sky-400 transition">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-700">Scene 4 • 0:58 - 1:18</span>
+            <span class="text-[10px] text-slate-500 font-mono">Gnani AI Prisma STT</span>
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            "At the deep-tech core of RxVaani is Gnani AI's state-of-the-art Prisma Speech-to-Text engine. Utilizing the Prisma version 3 REST API in codemix mode, it flawlessly transcribes code-mixed Hindi and English, accurately preserving pharmaceutical brand names and numerical dosages with sub-four-hundred millisecond response times."
+          </p>
+        </div>
+
+        <!-- Scene 5 Script Card -->
+        <div class="light-card p-4 rounded-xl space-y-2 hover:border-sky-400 transition">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-700">Scene 5 • 1:18 - 1:40</span>
+            <span class="text-[10px] text-slate-500 font-mono">Clinical Fuzzy Matching</span>
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            "RxVaani's clinical parsing engine extracts structured medical entities: chief complaints, vitals, diagnosis, and medications. To protect against speech recognition errors, our fuzzy matching algorithm cross-references phonetically similar brand names against a curated formulary of over fifty common Indian pharmaceuticals using Levenshtein distance matching."
+          </p>
+        </div>
+
+        <!-- Scene 6 Script Card -->
+        <div class="light-card p-4 rounded-xl space-y-2 hover:border-sky-400 transition">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-700">Scene 6 • 1:40 - 2:00</span>
+            <span class="text-[10px] text-slate-500 font-mono">Safety & Doctor Review</span>
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            "Patient safety is non-negotiable. RxVaani adheres strictly to the 'AI Drafts, Doctor Decides' paradigm. The system never issues autonomous prescriptions. Amber warning badges flag unverified dosages or low confidence scores. Doctors retain total agency to review, edit, and digitally authorize every line item."
+          </p>
+        </div>
+
+        <!-- Scene 7 Script Card -->
+        <div class="light-card p-4 rounded-xl space-y-2 md:col-span-2 hover:border-sky-400 transition">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-700">Scene 7 • 2:00 - 2:20</span>
+            <span class="text-[10px] text-slate-500 font-mono">NMC PDF Export & Architecture</span>
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            "With one click, an official, print-ready digital prescription PDF is generated adhering to National Medical Commission standards, complete with clinic branding, registration numbers, structured medicines table, and legal disclaimer. Built with a robust FastAPI backend and enterprise Java Spring Boot option, RxVaani is production-ready for India's clinical future."
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Hidden Offscreen Canvas for Video File Generation (Pure White Base) -->
+    <canvas id="recorder-canvas" width="1280" height="720" class="hidden"></canvas>
+
+  </main>
+
+  <script>
+    // Initialize Navbar & Audio
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('navbar-container').innerHTML = renderNavbar('video');
+      initVoices();
+      loadScene(0);
+      setupKeyboardControls();
+    });
+
+    // ---------------- SCENE DATA DEFINITIONS (Crisp White Theme) ----------------
+    const scenes = [
+      {
+        id: 0,
+        title: "RxVaani: AI Clinical Prescription Scribe",
+        subtitle: "Built for Great Indian AI Internship Challenge • Powered by Gnani AI Prisma STT",
+        duration: 18,
+        narration: "Welcome to RxVaani, an intelligent clinical prescription scribe engineered specifically for the Indian healthcare ecosystem, developed for the Great Indian AI Internship Challenge powered by Gnani AI. Our mission is to transform ambient doctor-patient consultations into fully structured, verified digital prescriptions in under ninety seconds.",
+        render: () => `
+          <div class="text-center space-y-6">
+            <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold shadow-xs">
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
+              <span>Next-Gen Clinical EHR Powered by Gnani AI Prisma v3.0</span>
+            </div>
+            
+            <h2 class="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+              From Spoken OPD Dialogue to <br>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-teal-600 to-indigo-600">
+                Verified Prescriptions in 90 Seconds
+              </span>
+            </h2>
+
+            <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-medium">
+              Designed specifically for high-volume Indian clinics, handling fast-paced <b>Hindi and Hinglish</b> consultations with zero hallucination risk.
+            </p>
+
+            <div class="grid grid-cols-3 gap-4 max-w-xl mx-auto pt-2">
+              <div class="bg-white p-4 rounded-2xl border border-sky-200 shadow-sm text-center">
+                <div class="text-2xl font-black text-sky-600 font-mono">90s</div>
+                <div class="text-[11px] text-slate-600 font-bold">Consult to PDF</div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-teal-200 shadow-sm text-center">
+                <div class="text-2xl font-black text-teal-600 font-mono">&lt;400ms</div>
+                <div class="text-[11px] text-slate-600 font-bold">Prisma STT Latency</div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-emerald-200 shadow-sm text-center">
+                <div class="text-2xl font-black text-emerald-600 font-mono">100%</div>
+                <div class="text-[11px] text-slate-600 font-bold">Doctor Control</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 1,
+        title: "The OPD Dilemma in Indian Healthcare",
+        subtitle: "High Patient Volume, Doctor Burnout, and Illegible Handwriting",
+        duration: 20,
+        narration: "In busy Indian outpatient departments, a doctor examines up to eighty patients every single day. Doctors spend over forty percent of their consultation time writing or typing prescriptions. Illegible handwriting frequently causes dangerous dispensing errors in pharmacies, while existing Western voice tools fail completely on Indian code-mixed speech.",
+        render: () => `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div class="space-y-4">
+              <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">
+                <span>⚠️ The Problem: 80+ Patients Daily</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">The 90-Second OPD Dilemma</h2>
+              <ul class="space-y-3 text-xs sm:text-sm text-slate-700">
+                <li class="flex items-start space-x-2.5">
+                  <span class="text-rose-600 font-bold">✕</span>
+                  <span><b>40% Consultation Time Wasted:</b> Clinicians spend 2-3 minutes typing instead of making eye contact with patients.</span>
+                </li>
+                <li class="flex items-start space-x-2.5">
+                  <span class="text-rose-600 font-bold">✕</span>
+                  <span><b>Illegible Handwriting:</b> Pharmacists guess doses, causing thousands of preventable medication errors annually.</span>
+                </li>
+                <li class="flex items-start space-x-2.5">
+                  <span class="text-rose-600 font-bold">✕</span>
+                  <span><b>Western STT Failure:</b> Generic tools fail on colloquial Hindi, colloquial dosage expressions, and Indian brand names.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Problem Visual Card -->
+            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+              <div class="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-200">
+                <span>Traditional Indian OPD Burden</span>
+                <span class="text-rose-600 font-mono font-bold">CRITICAL</span>
+              </div>
+              <div class="space-y-2">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-700 font-semibold">Physician Documentation Fatigue</span>
+                  <span class="text-rose-600 font-bold">87%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2">
+                  <div class="bg-rose-500 h-2 rounded-full w-[87%]"></div>
+                </div>
+                <div class="flex justify-between text-xs pt-1">
+                  <span class="text-slate-700 font-semibold">Bilingual Code-Mixing in Consultations</span>
+                  <span class="text-sky-600 font-bold">92%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2">
+                  <div class="bg-sky-600 h-2 rounded-full w-[92%]"></div>
+                </div>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-slate-200 text-[11px] text-slate-700 font-mono">
+                "Subah sham 1 goli khana khane ke baad... aur garmi lage to ye le lena"
+                <div class="text-slate-400 text-[10px] mt-1">→ Traditional tools drop dosage or transcribe garbled tokens.</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 2,
+        title: "Ambient Consultation Audio Intake",
+        subtitle: "Continuous Mic Streaming & Telephonic Code-Mixed Voice",
+        duration: 20,
+        narration: "RxVaani solves this seamlessly. It captures ambient doctor-patient conversations through clinic microphones or telephonic audio streams. Patients and doctors speak naturally in Hindi and Hinglish, expressing symptoms, duration, and medication plans without altering their natural clinical dialogue.",
+        render: () => `
+          <div class="space-y-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div>
+                <span class="px-3 py-1 rounded-md bg-teal-50 border border-teal-200 text-teal-700 text-xs font-bold">
+                  Step 1: Ambient Sound Intake
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Doctor-Patient Conversation Capture</h2>
+              </div>
+              <div class="flex items-center space-x-2 text-xs font-mono text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 font-bold">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Active 16kHz PCM Stream</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Patient Demographic Card -->
+              <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                <div class="text-xs text-sky-700 font-bold">Patient Demographics</div>
+                <div class="text-base font-extrabold text-slate-900">Ramesh Patel</div>
+                <div class="text-xs text-slate-600 space-y-1">
+                  <div>Age/Sex: <span class="text-slate-900 font-semibold">42 / Male</span></div>
+                  <div>OPD ID: <span class="text-slate-900 font-mono font-semibold">OPD-2026-9482</span></div>
+                  <div>Department: <span class="text-emerald-700 font-semibold">General Medicine</span></div>
+                </div>
+              </div>
+
+              <!-- Live Audio Waveform Card -->
+              <div class="bg-white p-4 rounded-xl border border-sky-200 shadow-sm md:col-span-2 space-y-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-sky-700 font-bold flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                    <span>Live Hindi/Hinglish Audio Frequency</span>
+                  </span>
+                  <span class="text-slate-500 font-mono text-[11px]">Duration: 00:45s</span>
+                </div>
+
+                <!-- Animated Wave Bars (Crisp Blue/Teal) -->
+                <div class="flex items-center justify-center space-x-2.5 h-14 bg-slate-50 rounded-xl px-4 border border-slate-200">
+                  <div class="wave-bar" style="animation-delay: 0.1s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.3s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.5s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.2s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.4s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.6s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.25s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.45s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.15s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.35s"></div>
+                  <div class="wave-bar" style="animation-delay: 0.55s"></div>
+                </div>
+
+                <div class="text-[11px] text-slate-600 italic">
+                  "Doctor sahab, 3 din se tez bukhar hai aur gale me dard ho raha hai..."
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 3,
+        title: "Gnani AI Prisma STT v3.0 Integration",
+        subtitle: "Native Indian Codemixing & Sub-400ms High-Fidelity ASR",
+        duration: 20,
+        narration: "At the deep-tech core of RxVaani is Gnani AI's state-of-the-art Prisma Speech-to-Text engine. Utilizing the Prisma version 3 REST API in codemix mode, it flawlessly transcribes code-mixed Hindi and English, accurately preserving pharmaceutical brand names and numerical dosages with sub-four-hundred millisecond response times.",
+        render: () => `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="px-3 py-1 rounded-md bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold">
+                  Deep Tech: Gnani Prisma STT
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Prisma v3.0 Codemix Engine</h2>
+              </div>
+              <div class="text-right">
+                <span class="text-emerald-600 font-mono font-bold text-sm">Latency: 382ms</span>
+                <div class="text-[10px] text-slate-500">Endpoint: api.vachana.ai/stt/v3</div>
+              </div>
+            </div>
+
+            <!-- Transcription Stream Visualizer (Clean White Theme) -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-4 space-y-3 font-mono shadow-sm">
+              <div class="flex items-center justify-between text-xs text-slate-500 border-b border-slate-200 pb-2">
+                <span class="text-sky-700 font-bold">STT RESPONSE STREAM [X-API-Key-ID: Verified]</span>
+                <span class="text-emerald-600 font-semibold">format: codemix</span>
+              </div>
+              <div class="text-xs sm:text-sm text-slate-800 leading-relaxed space-y-2">
+                <div>
+                  <span class="text-sky-700 font-bold">Patient:</span> Namaste doctor sahab, mujhe teen din se tez bukhar hai aur gala bohot dard kar raha hai.
+                </div>
+                <div>
+                  <span class="text-teal-700 font-bold">Doctor:</span> Thik hai Ramesh ji, temperature 101 hai. Main aapko Paracetamol 650mg likh raha hu subah shaam khana khane ke baad. Aur gale ke infection ke liye Azithromycin 500mg ek goli roz 3 din tak lena.
+                </div>
+              </div>
+              <div class="pt-2 flex items-center space-x-3 text-[11px]">
+                <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">Paracetamol 650mg: 98.4% conf</span>
+                <span class="px-2 py-0.5 rounded bg-sky-50 text-sky-800 border border-sky-200 font-semibold">Azithromycin 500mg: 96.1% conf</span>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 4,
+        title: "Clinical Entity Extraction & Fuzzy Drug Matching",
+        subtitle: "Colloquial Expressions to Structured Formulary",
+        duration: 22,
+        narration: "RxVaani's clinical parsing engine extracts structured medical entities: chief complaints, vitals, diagnosis, and medications. To protect against speech recognition errors, our fuzzy matching algorithm cross-references phonetically similar brand names against a curated formulary of over fifty common Indian pharmaceuticals using Levenshtein distance matching.",
+        render: () => `
+          <div class="space-y-4">
+            <div>
+              <span class="px-3 py-1 rounded-md bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold">
+                Step 3: Medical Entity Intelligence
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Structured Extraction & 50+ Drug Catalog</h2>
+            </div>
+
+            <!-- Structured Medicine Cards (Clean White) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              
+              <!-- Medicine 1 -->
+              <div class="bg-white p-4 rounded-xl border border-sky-200 shadow-sm space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-sky-700">Tablet #1</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-bold">Levenshtein 100%</span>
+                </div>
+                <div class="text-sm font-black text-slate-900">Paracetamol 650 mg</div>
+                <div class="text-[11px] text-slate-600 space-y-1 font-mono">
+                  <div>Dosage: <span class="text-sky-700 font-bold">1-0-1 (BD)</span></div>
+                  <div>Duration: <span class="text-sky-700 font-bold">3 Days</span></div>
+                  <div>Route: <span class="text-teal-700 font-bold">Oral, After Meals</span></div>
+                </div>
+              </div>
+
+              <!-- Medicine 2 -->
+              <div class="bg-white p-4 rounded-xl border border-teal-200 shadow-sm space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-teal-700">Tablet #2</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-bold">Levenshtein 94%</span>
+                </div>
+                <div class="text-sm font-black text-slate-900">Azithromycin 500 mg</div>
+                <div class="text-[11px] text-slate-600 space-y-1 font-mono">
+                  <div>Dosage: <span class="text-teal-700 font-bold">1-0-0 (OD)</span></div>
+                  <div>Duration: <span class="text-teal-700 font-bold">3 Days</span></div>
+                  <div>Route: <span class="text-teal-700 font-bold">Oral, After Meals</span></div>
+                </div>
+              </div>
+
+              <!-- Medicine 3 -->
+              <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-indigo-700">Capsule #3</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-bold">Formulary Match</span>
+                </div>
+                <div class="text-sm font-black text-slate-900">Pantoprazole 40 mg</div>
+                <div class="text-[11px] text-slate-600 space-y-1 font-mono">
+                  <div>Dosage: <span class="text-indigo-700 font-bold">1-0-0 (OD)</span></div>
+                  <div>Duration: <span class="text-indigo-700 font-bold">3 Days</span></div>
+                  <div>Route: <span class="text-indigo-700 font-bold">Oral, Empty Stomach</span></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Clinical Metadata Bar -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs flex flex-wrap items-center justify-between gap-3 text-slate-700">
+              <div><b>Chief Complaints:</b> Acute Fever (101°F), Pharyngitis (3 days)</div>
+              <div><b>Provisional Diagnosis:</b> Acute Upper Respiratory Tract Infection (URTI)</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 5,
+        title: "Golden Guardrail: AI Drafts, Doctor Decides",
+        subtitle: "Zero Hallucinations • Interactive Doctor Verification & Amber Alerts",
+        duration: 20,
+        narration: "Patient safety is non-negotiable. RxVaani adheres strictly to the 'AI Drafts, Doctor Decides' paradigm. The system never issues autonomous prescriptions. Amber warning badges flag unverified dosages or low confidence scores. Doctors retain total agency to review, edit, and digitally authorize every line item.",
+        render: () => `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="px-3 py-1 rounded-md bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold">
+                  Clinical Safety Guardrail
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">"AI Drafts, Doctor Decides"</h2>
+              </div>
+              <div class="text-xs px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold flex items-center space-x-1.5">
+                <span>✓</span>
+                <span>Doctor Sign-Off Mandatory</span>
+              </div>
+            </div>
+
+            <!-- Safety Alert Card (Amber Alert) -->
+            <div class="p-4 rounded-xl bg-amber-50 border border-amber-300 space-y-2 shadow-sm">
+              <div class="flex items-center space-x-2 text-amber-800 font-bold text-xs">
+                <span>⚠️</span>
+                <span>CLINICAL UNCERTAINTY FLAGGING (Active Amber Badge)</span>
+              </div>
+              <p class="text-xs text-amber-900 leading-relaxed font-medium">
+                Azithromycin dosage duration detected from conversational audio. Pharmacological standard is 3-5 days. Doctor review required prior to prescription issuance.
+              </p>
+            </div>
+
+            <!-- Verification Action Simulation -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
+                <div class="font-bold text-sky-700">Doctor Interactive Pad</div>
+                <div class="text-slate-600">Clinician can click to edit dosage, frequency, or delete unconfirmed rows in 1 tap.</div>
+                <div class="flex items-center space-x-2 text-emerald-700 text-[11px] font-mono font-bold">
+                  <span>● Zero Autonomous Prescriptions</span>
+                </div>
+              </div>
+
+              <div class="bg-white p-4 rounded-xl border border-emerald-200 shadow-sm space-y-2 text-xs">
+                <div class="font-bold text-emerald-700">Digital Seal & Verification</div>
+                <div class="text-slate-600">Signed by Dr. Vedant Sharma (MCI-Reg: 84920/2019) with timestamped audit trail.</div>
+                <div class="flex items-center space-x-2 text-sky-700 text-[11px] font-mono font-bold">
+                  <span>● NMC Telemedicine Act Compliant</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 6,
+        title: "Print-Ready NMC PDF Export & Architecture",
+        subtitle: "One-Click ReportLab Engine • Production FastAPI & Spring Boot Ready",
+        duration: 20,
+        narration: "With one click, an official, print-ready digital prescription PDF is generated adhering to National Medical Commission standards, complete with clinic branding, registration numbers, structured instructions, and legal disclaimer. Built with a robust FastAPI backend and enterprise Java Spring Boot option, RxVaani is production-ready for India's clinical future.",
+        render: () => `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            
+            <div class="space-y-4">
+              <span class="px-3 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
+                Output: Verified Clinical PDF
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Instant Official Prescription</h2>
+              
+              <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                <li class="flex items-center space-x-2">
+                  <span class="text-emerald-600 font-bold">✓</span>
+                  <span>Doctor Registration & Clinic Letterhead</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                  <span class="text-emerald-600 font-bold">✓</span>
+                  <span>Formatted Rx Symbol, Dosage & Timing Tables</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                  <span class="text-emerald-600 font-bold">✓</span>
+                  <span>AI Legal Disclaimer & Doctor Signature Block</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                  <span class="text-emerald-600 font-bold">✓</span>
+                  <span>FastAPI (Python) + Java Spring Boot Architectures</span>
+                </li>
+              </ul>
+
+              <div class="pt-2">
+                <a href="/consultation" class="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-md shadow-sky-600/20 transition">
+                  <span>Start Live Consultation Now</span>
+                  <span>➔</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- PDF Mockup Card (Print-Ready Look) -->
+            <div class="bg-white text-slate-900 rounded-2xl p-5 shadow-lg space-y-3 border border-slate-300">
+              <div class="flex justify-between items-start border-b border-slate-200 pb-2">
+                <div>
+                  <div class="text-sm font-black text-sky-950">Aarogya Clinic & Diagnostics</div>
+                  <div class="text-[10px] text-slate-500">Dr. Vedant Sharma, MBBS, MD • MCI-Reg: 84920/2019</div>
+                </div>
+                <div class="text-xs font-bold text-slate-400">PRESCRIPTION</div>
+              </div>
+
+              <div class="text-[11px] bg-slate-50 p-2 rounded-lg flex justify-between border border-slate-200">
+                <span><b>Patient:</b> Ramesh Patel (42/M)</span>
+                <span><b>Date:</b> Today</span>
+              </div>
+
+              <div class="text-base font-black text-sky-700">℞</div>
+
+              <div class="text-[10px] space-y-1.5 border-t border-b border-slate-200 py-2">
+                <div class="flex justify-between font-bold text-slate-800">
+                  <span>1. Tab. Paracetamol 650mg</span>
+                  <span class="text-sky-700 font-mono">1-0-1 • 3 Days</span>
+                </div>
+                <div class="flex justify-between font-bold text-slate-800">
+                  <span>2. Tab. Azithromycin 500mg</span>
+                  <span class="text-sky-700 font-mono">1-0-0 • 3 Days</span>
+                </div>
+              </div>
+
+              <div class="flex justify-between items-end pt-2 text-[10px]">
+                <span class="text-slate-400 italic">Generated via RxVaani & ReportLab</span>
+                <span class="border-t border-slate-400 pt-1 font-bold">Doctor Signature</span>
+              </div>
+            </div>
+
+          </div>
+        `
+      }
+    ];
+
+    // ---------------- STATE VARIABLES ----------------
+    let currentSceneIndex = 0;
+    let isPlaying = false;
+    let isMuted = false;
+    let sceneTimer = null;
+    let sceneSecondsElapsed = 0;
+    let totalSecondsElapsed = 0;
+    const totalDuration = scenes.reduce((acc, s) => acc + s.duration, 0);
+
+    // Web Speech API
+    let speechSynth = window.speechSynthesis;
+    let currentUtterance = null;
+    let americanVoices = [];
+    let selectedVoice = null;
+    let speechRate = 1.0;
+
+    // MediaRecorder for Video File Generation
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let isRecording = false;
+    let canvasAnimationId = null;
+
+    // ---------------- AMERICAN ENGLISH VOICE SETUP ----------------
+    function initVoices() {
+      if (!('speechSynthesis' in window)) {
+        console.warn('Speech synthesis not supported in this browser.');
+        return;
+      }
+
+      function populateVoices() {
+        const voices = speechSynth.getVoices();
+        if (!voices || voices.length === 0) return;
+
+        // Strictly prioritize American English (en-US / en_US)
+        americanVoices = voices.filter(v => 
+          v.lang === 'en-US' || 
+          v.lang === 'en_US' || 
+          v.name.includes('United States') ||
+          v.name.includes('US English')
+        );
+
+        // Fallback to any English if no strict en-US
+        if (americanVoices.length === 0) {
+          americanVoices = voices.filter(v => v.lang.startsWith('en'));
+        }
+        if (americanVoices.length === 0) {
+          americanVoices = voices;
+        }
+
+        // Sort: Natural / Jenny / Guy / Aria / Google / David first
+        americanVoices.sort((a, b) => {
+          const scoreA = getVoiceQualityScore(a.name);
+          const scoreB = getVoiceQualityScore(b.name);
+          return scoreB - scoreA;
+        });
+
+        const select = document.getElementById('voice-select');
+        select.innerHTML = '';
+
+        americanVoices.forEach((voice, index) => {
+          const opt = document.createElement('option');
+          opt.value = index;
+          opt.textContent = `🇺🇸 ${voice.name.replace(/Microsoft |Google /g, '')}`;
+          select.appendChild(opt);
+        });
+
+        // Pre-select the highest quality American English voice
+        selectedVoice = americanVoices[0];
+        if (select.options.length > 0) {
+          select.selectedIndex = 0;
+        }
+      }
+
+      populateVoices();
+      if (speechSynth.onvoiceschanged !== undefined) {
+        speechSynth.onvoiceschanged = populateVoices;
+      }
+    }
+
+    function getVoiceQualityScore(name) {
+      const n = name.toLowerCase();
+      if (n.includes('natural')) return 100;
+      if (n.includes('jenny')) return 95;
+      if (n.includes('guy')) return 90;
+      if (n.includes('aria')) return 88;
+      if (n.includes('google us english')) return 85;
+      if (n.includes('david')) return 80;
+      if (n.includes('zira')) return 75;
+      if (n.includes('samantha')) return 70;
+      return 10;
+    }
+
+    function changeVoice() {
+      const idx = document.getElementById('voice-select').value;
+      selectedVoice = americanVoices[idx];
+      if (isPlaying) {
+        speakSceneNarration(currentSceneIndex);
+      }
+    }
+
+    function changeSpeed() {
+      speechRate = parseFloat(document.getElementById('voice-speed').value) || 1.0;
+      if (isPlaying) {
+        speakSceneNarration(currentSceneIndex);
+      }
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById('btn-mute').textContent = isMuted ? '🔇' : '🔊';
+      if (isMuted) {
+        speechSynth.cancel();
+      } else if (isPlaying) {
+        speakSceneNarration(currentSceneIndex);
+      }
+    }
+
+    // ---------------- SCENE NAVIGATION & RENDERING ----------------
+    function loadScene(index) {
+      if (index < 0 || index >= scenes.length) return;
+      currentSceneIndex = index;
+      sceneSecondsElapsed = 0;
+
+      const scene = scenes[index];
+
+      // Update Scene Container with smooth animation
+      const container = document.getElementById('scene-container');
+      container.classList.remove('scene-fade-in');
+      void container.offsetWidth; // trigger reflow
+      container.innerHTML = scene.render();
+      container.classList.add('scene-fade-in');
+
+      // Update Badges & Subtitles
+      document.getElementById('scene-counter-badge').textContent = `Scene ${index + 1} of ${scenes.length}`;
+      document.getElementById('subtitle-text').textContent = scene.narration;
+
+      // Update Scene Pills
+      const pills = document.querySelectorAll('.scene-pill');
+      pills.forEach((p, idx) => {
+        if (idx === index) {
+          p.className = 'scene-pill px-2.5 py-1 rounded-lg text-[11px] font-bold bg-sky-600 text-white shadow-2xs';
+        } else {
+          p.className = 'scene-pill px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 transition';
+        }
+      });
+
+      updateTimeDisplay();
+
+      // If playing, speak narration with American voice
+      if (isPlaying) {
+        speakSceneNarration(index);
+      }
+    }
+
+    function speakSceneNarration(index) {
+      speechSynth.cancel();
+      if (isMuted) return;
+
+      const text = scenes[index].narration;
+      currentUtterance = new SpeechSynthesisUtterance(text);
+      currentUtterance.lang = 'en-US'; // Strict American English
+      if (selectedVoice) currentUtterance.voice = selectedVoice;
+      currentUtterance.rate = speechRate;
+      currentUtterance.pitch = 1.0;
+
+      // When narration finishes, advance scene if not finished
+      currentUtterance.onend = () => {
+        if (isPlaying) {
+          setTimeout(() => {
+            if (currentSceneIndex < scenes.length - 1) {
+              nextScene();
+            } else {
+              finishPlayback();
+            }
+          }, 500);
+        }
+      };
+
+      currentUtterance.onerror = (e) => {
+        console.warn('SpeechSynthesis error:', e);
+      };
+
+      speechSynth.speak(currentUtterance);
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      updatePlayButtonUI();
+
+      if (isPlaying) {
+        speakSceneNarration(currentSceneIndex);
+        startTimer();
+      } else {
+        speechSynth.cancel();
+        stopTimer();
+      }
+    }
+
+    function updatePlayButtonUI() {
+      const playIcon = document.getElementById('play-icon');
+      const btn = document.getElementById('btn-play');
+      if (isPlaying) {
+        playIcon.textContent = '⏸';
+        btn.classList.replace('bg-sky-600', 'bg-amber-600');
+        btn.classList.replace('hover:bg-sky-500', 'hover:bg-amber-500');
+      } else {
+        playIcon.textContent = '▶';
+        btn.classList.replace('bg-amber-600', 'bg-sky-600');
+        btn.classList.replace('hover:bg-amber-500', 'hover:bg-sky-500');
+      }
+    }
+
+    function nextScene() {
+      if (currentSceneIndex < scenes.length - 1) {
+        loadScene(currentSceneIndex + 1);
+      } else {
+        finishPlayback();
+      }
+    }
+
+    function prevScene() {
+      if (currentSceneIndex > 0) {
+        loadScene(currentSceneIndex - 1);
+      }
+    }
+
+    function jumpToScene(index) {
+      loadScene(index);
+      if (isPlaying) {
+        speakSceneNarration(index);
+      }
+    }
+
+    function restartVideo() {
+      totalSecondsElapsed = 0;
+      loadScene(0);
+      if (!isPlaying) {
+        togglePlay();
+      } else {
+        speakSceneNarration(0);
+      }
+    }
+
+    function finishPlayback() {
+      isPlaying = false;
+      updatePlayButtonUI();
+      speechSynth.cancel();
+      stopTimer();
+      if (isRecording) {
+        stopVideoRecording();
+      }
+    }
+
+    // ---------------- TIMELINE & PROGRESS ----------------
+    function startTimer() {
+      stopTimer();
+      sceneTimer = setInterval(() => {
+        totalSecondsElapsed++;
+        sceneSecondsElapsed++;
+
+        updateTimeDisplay();
+
+        // Fallback: advance based on duration if speech ends early
+        if (sceneSecondsElapsed >= scenes[currentSceneIndex].duration) {
+          if (currentSceneIndex < scenes.length - 1) {
+            nextScene();
+          } else {
+            finishPlayback();
+          }
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (sceneTimer) {
+        clearInterval(sceneTimer);
+        sceneTimer = null;
+      }
+    }
+
+    function updateTimeDisplay() {
+      let elapsedSoFar = 0;
+      for (let i = 0; i < currentSceneIndex; i++) {
+        elapsedSoFar += scenes[i].duration;
+      }
+      elapsedSoFar += sceneSecondsElapsed;
+
+      const pct = Math.min(100, (elapsedSoFar / totalDuration) * 100);
+      document.getElementById('video-progress').style.width = `${pct}%`;
+
+      document.getElementById('current-time-display').textContent = formatTime(elapsedSoFar);
+      document.getElementById('total-time-display').textContent = formatTime(totalDuration);
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function seekByClick(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickPct = (e.clientX - rect.left) / rect.width;
+      const targetSec = clickPct * totalDuration;
+
+      let accumulated = 0;
+      for (let i = 0; i < scenes.length; i++) {
+        if (targetSec >= accumulated && targetSec <= accumulated + scenes[i].duration) {
+          jumpToScene(i);
+          sceneSecondsElapsed = targetSec - accumulated;
+          updateTimeDisplay();
+          break;
+        }
+        accumulated += scenes[i].duration;
+      }
+    }
+
+    // ---------------- KEYBOARD CONTROLS ----------------
+    function setupKeyboardControls() {
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.code === 'Space') {
+          e.preventDefault();
+          togglePlay();
+        } else if (e.code === 'ArrowRight') {
+          e.preventDefault();
+          nextScene();
+        } else if (e.code === 'ArrowLeft') {
+          e.preventDefault();
+          prevScene();
+        } else if (e.code === 'KeyF') {
+          e.preventDefault();
+          toggleFullscreen();
+        } else if (e.code === 'KeyM') {
+          e.preventDefault();
+          toggleMute();
+        }
+      });
+    }
+
+    function toggleFullscreen() {
+      const stage = document.getElementById('video-stage');
+      if (!document.fullscreenElement) {
+        if (stage.requestFullscreen) stage.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // ---------------- VIDEO RECORDER ON WHITE BACKGROUND ----------------
+    function toggleVideoRecording() {
+      if (isRecording) {
+        stopVideoRecording();
+      } else {
+        startVideoRecording();
+      }
+    }
+
+    async function startVideoRecording() {
+      isRecording = true;
+      recordedChunks = [];
+
+      document.getElementById('record-btn-text').textContent = '⏹ Stop & Download Video';
+      document.getElementById('recording-toast').classList.remove('hidden');
+      document.getElementById('recording-live-indicator').classList.remove('hidden');
+      document.getElementById('recording-live-indicator').classList.add('flex');
+
+      // Prepare Canvas Stream with Pure White Base
+      const canvas = document.getElementById('recorder-canvas');
+      const ctx = canvas.getContext('2d');
+
+      function drawFrame() {
+        if (!isRecording) return;
+
+        // Pure Crisp White Background
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Header Title
+        ctx.fillStyle = '#0284C7';
+        ctx.font = 'bold 30px sans-serif';
+        ctx.fillText('RxVaani AI Clinical Prescription Scribe', 60, 65);
+
+        ctx.fillStyle = '#64748B';
+        ctx.font = '16px sans-serif';
+        ctx.fillText('Great Indian AI Internship Challenge • Gnani AI Prisma STT', 60, 95);
+
+        // Active Scene Title
+        const current = scenes[currentSceneIndex];
+        ctx.fillStyle = '#0F172A';
+        ctx.font = 'bold 34px sans-serif';
+        ctx.fillText(`Scene ${current.id + 1}: ${current.title}`, 60, 185);
+
+        ctx.fillStyle = '#475569';
+        ctx.font = '20px sans-serif';
+        ctx.fillText(current.subtitle, 60, 225);
+
+        // Draw animated sound waves (Teal & Sky on White)
+        ctx.fillStyle = '#0D9488';
+        for (let i = 0; i < 22; i++) {
+          const barHeight = 20 + Math.sin((Date.now() / 200) + i) * 36;
+          ctx.fillRect(60 + i * 16, 280, 8, barHeight);
+        }
+
+        // Subtitles / Narration text box (Crisp Clean White Card)
+        ctx.fillStyle = '#F8FAFC';
+        ctx.strokeStyle = '#CBD5E1';
+        ctx.lineWidth = 2;
+        if (ctx.roundRect) {
+          ctx.roundRect(60, 510, 1160, 150, 16);
+          ctx.fill();
+          ctx.stroke();
+        } else {
+          ctx.fillRect(60, 510, 1160, 150);
+          ctx.strokeRect(60, 510, 1160, 150);
+        }
+
+        ctx.fillStyle = '#0F172A';
+        ctx.font = '20px sans-serif';
+        wrapText(ctx, `🇺🇸 American Voiceover: ${current.narration}`, 90, 555, 1100, 30);
+
+        canvasAnimationId = requestAnimationFrame(drawFrame);
+      }
+
+      drawFrame();
+
+      const stream = canvas.captureStream(30);
+
+      try {
+        let mimeType = 'video/webm;codecs=vp9';
+        if (!MediaRecorder.isTypeSupported(mimeType)) {
+          mimeType = 'video/webm';
+        }
+
+        mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data && event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = `RxVaani-AI-Prescription-Scribe-Demo.webm`;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+        };
+
+        mediaRecorder.start();
+
+        // Restart video from beginning with American voice narration
+        restartVideo();
+
+      } catch (err) {
+        console.error('Error starting MediaRecorder:', err);
+        alert('Could not start video recording on this browser: ' + err.message);
+        stopVideoRecording();
+      }
+    }
+
+    function stopVideoRecording() {
+      isRecording = false;
+      if (canvasAnimationId) {
+        cancelAnimationFrame(canvasAnimationId);
+      }
+
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+
+      document.getElementById('record-btn-text').textContent = '🔴 Record & Download Video (.webm)';
+      document.getElementById('recording-toast').classList.add('hidden');
+      document.getElementById('recording-live-indicator').classList.add('hidden');
+      document.getElementById('recording-live-indicator').classList.remove('flex');
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+          ctx.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    // ---------------- SCRIPT COPY HELPER ----------------
+    function copyFullScript() {
+      const scriptText = scenes.map(s => 
+        `[SCENE ${s.id + 1}: ${s.title.toUpperCase()}]\n` +
+        `Subtitle: ${s.subtitle}\n` +
+        `American English Narration: "${s.narration}"\n`
+      ).join('\n---\n\n');
+
+      navigator.clipboard.writeText(scriptText).then(() => {
+        const btnText = document.getElementById('copy-btn-text');
+        btnText.textContent = '✓ Copied to Clipboard!';
+        setTimeout(() => { btnText.textContent = 'Copy Full Script'; }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinic Settings - RxVaani Clinical EHR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/static/navbar.js"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-900">
+
+  <!-- Navbar -->
+  <div id="navbar-container"></div>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-6">
+    
+    <!-- Page Header Banner -->
+    <div class="border-b border-slate-200 pb-5">
+      <h1 class="text-2xl font-black text-slate-900 tracking-tight">
+        Clinic & Practitioner Configuration
+      </h1>
+      <p class="text-xs text-slate-500 font-medium mt-1">
+        Configure doctor credentials, hospital header branding, and Gnani Prisma Speech AI keys.
+      </p>
+    </div>
+
+    <!-- Settings Card -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-xs space-y-6">
+      
+      <!-- Section 1: Practitioner Details -->
+      <div>
+        <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
+          <span>👨‍⚕️ Medical Practitioner Credentials</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Doctor Full Name & Degrees</label>
+            <input type="text" id="cfg-doctor-name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Medical Registration Number (MCI/NMC)</label>
+            <input type="text" id="cfg-doctor-reg" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Clinic Branding -->
+      <div>
+        <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
+          <span>🏥 Clinic & Hospital Information</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Clinic / Hospital Name</label>
+            <input type="text" id="cfg-clinic-name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Clinic Address & Phone</label>
+            <input type="text" id="cfg-clinic-addr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Speech AI & STT -->
+      <div>
+        <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
+          <span>🎙️ Gnani AI Prisma Speech-to-Text API</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Gnani API Key (X-API-Key-ID)</label>
+            <input type="password" id="cfg-gnani-key" placeholder="app.gnani.ai/voice API Key" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
+            <span class="text-[10px] text-slate-400 mt-1 block">5,000 free credits at app.gnani.ai/voice</span>
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Extraction LLM Provider</label>
+            <select id="cfg-llm-provider" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium bg-white">
+              <option value="Gemini">Google Gemini 1.5 Flash</option>
+              <option value="OpenAI">OpenAI GPT-4o-mini</option>
+              <option value="Groq">Groq (Llama-3.3)</option>
+              <option value="Smart Heuristic">Smart Local Heuristic (Zero Key Fallback)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Save CTA -->
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+        <span id="save-msg" class="text-xs font-bold text-emerald-600 hidden">
+          ✓ Configuration saved successfully!
+        </span>
+        <button onclick="saveSettings()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-md shadow-sky-600/20 transition ml-auto">
+          Save Settings
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    document.getElementById('navbar-container').innerHTML = renderNavbar('settings');
+
+    // Populate existing values
+    document.getElementById('cfg-doctor-name').value = localStorage.getItem('rx_doctor_name') || 'Dr. Vedant Sharma, MBBS, MD';
+    document.getElementById('cfg-doctor-reg').value = localStorage.getItem('rx_doctor_reg') || 'MCI-Reg: 84920/2019';
+    document.getElementById('cfg-clinic-name').value = localStorage.getItem('rx_clinic_name') || 'Aarogya Clinic & Diagnostics';
+    document.getElementById('cfg-clinic-addr').value = localStorage.getItem('rx_clinic_address') || 'Shop 12, Health Square, MG Road, New Delhi';
+    document.getElementById('cfg-gnani-key').value = localStorage.getItem('rx_gnani_key') || '';
+    document.getElementById('cfg-llm-provider').value = localStorage.getItem('rx_llm_provider') || 'Gemini';
+
+    function saveSettings() {
+      localStorage.setItem('rx_doctor_name', document.getElementById('cfg-doctor-name').value.trim());
+      localStorage.setItem('rx_doctor_reg', document.getElementById('cfg-doctor-reg').value.trim());
+      localStorage.setItem('rx_clinic_name', document.getElementById('cfg-clinic-name').value.trim());
+      localStorage.setItem('rx_clinic_address', document.getElementById('cfg-clinic-addr').value.trim());
+      localStorage.setItem('rx_gnani_key', document.getElementById('cfg-gnani-key').value.trim());
+      localStorage.setItem('rx_llm_provider', document.getElementById('cfg-llm-provider').value);
+
+      document.getElementById('navbar-container').innerHTML = renderNavbar('settings');
+      const msg = document.getElementById('save-msg');
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('hidden'), 2500);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Studio - RxVaani Clinical EHR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/static/navbar.js"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+    @keyframes pulse-wave { 0%, 100% { height: 6px; } 50% { height: 32px; } }
+    .wave-bar { width: 3.5px; border-radius: 9999px; background: linear-gradient(to top, #0284C7, #0D9488); animation: pulse-wave 1.1s ease-in-out infinite; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-900">
+
+  <!-- Navbar -->
+  <div id="navbar-container"></div>
+
+  <!-- Main Container -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-6">
+    
+    <!-- Top Patient Info Banner -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-center space-x-3.5">
+        <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center font-bold text-base">
+          👤
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-base font-extrabold text-slate-900" id="disp-patient-name">Ramesh Kumar</span>
+            <span class="text-xs text-slate-500 font-semibold" id="disp-patient-meta">42 Yrs • Male</span>
+          </div>
+          <div class="text-xs text-slate-500 font-medium mt-0.5">
+            Chief Complaint: <span class="text-slate-800 font-semibold" id="disp-patient-complaint">Acute Fever & Body Ache</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="/" class="text-xs font-bold text-sky-600 hover:text-sky-700 flex items-center space-x-1">
+        <span>← Edit Patient Intake</span>
+      </a>
+    </div>
+
+    <!-- Voice Studio Card -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-6">
+      
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+            <span>🎙️ Gnani Prisma Speech-to-Text Studio</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Indian telephonic & noisy OPD speech recognition engine tuned for code-mixed Hindi & Hinglish.
+          </p>
+        </div>
+
+        <button id="btn-transcribe" onclick="startTranscription()" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs transition shadow-md shadow-teal-600/20 flex items-center space-x-2">
+          <span id="transcribe-spinner" class="hidden animate-spin">⏳</span>
+          <span id="transcribe-text">Transcribe Audio with Prisma</span>
+        </button>
+      </div>
+
+      <!-- Engine Status & Metrics -->
+      <div id="metrics-bar" class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs text-slate-600 font-semibold flex-wrap gap-2">
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Engine: <b class="text-slate-900">Gnani Prisma v3.0</b></span>
+        </div>
+        <div>Language: <b class="text-slate-900">hi-IN (Colloquial Hinglish)</b></div>
+        <div>Latency: <b class="text-emerald-700 font-mono" id="disp-latency">0.38s</b></div>
+      </div>
+
+      <!-- Audio Playback (if available) -->
+      <div id="audio-player-container" class="hidden">
+        <label class="text-xs font-bold text-slate-700 block mb-1">Consultation Audio Track:</label>
+        <audio id="audio-player" controls class="w-full h-10 rounded-xl bg-slate-100"></audio>
+      </div>
+
+      <!-- Transcript Box -->
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="text-xs font-bold text-slate-800">
+            Spoken Consultation Transcript (Hindi / Hinglish):
+          </label>
+          <span class="text-[11px] text-slate-400 font-medium">Doctor can edit or verify text directly</span>
+        </div>
+        <textarea
+          id="transcript-box"
+          rows="7"
+          placeholder="Transcription will stream here once you click 'Transcribe Audio with Prisma'..."
+          class="w-full p-4 rounded-xl border border-slate-200 text-slate-900 text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-sky-500 bg-slate-50/50"
+        ></textarea>
+      </div>
+
+      <!-- Bottom Navigation CTA -->
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-xs text-slate-500 font-medium">
+          Next: Extract structured medicines, doses, and clinical entities
+        </span>
+
+        <button id="btn-extract" onclick="proceedToPrescription()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold text-xs transition shadow-md shadow-sky-600/20 flex items-center space-x-2">
+          <span id="extract-spinner" class="hidden animate-spin">⚙️</span>
+          <span id="extract-text">Generate Clinical Draft & Review Prescription ➔</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    document.getElementById('navbar-container').innerHTML = renderNavbar('studio');
+
+    // Load Patient Info from session
+    const patientName = sessionStorage.getItem('rx_patient_name') || 'Ramesh Kumar';
+    const patientAge = sessionStorage.getItem('rx_patient_age') || '42';
+    const patientGender = sessionStorage.getItem('rx_patient_gender') || 'Male';
+    const patientComplaint = sessionStorage.getItem('rx_patient_complaint') || 'Acute Fever & Body Ache';
+    const audioBase64 = sessionStorage.getItem('rx_audio_base64');
+
+    document.getElementById('disp-patient-name').innerText = patientName;
+    document.getElementById('disp-patient-meta').innerText = `${patientAge} Yrs • ${patientGender}`;
+    document.getElementById('disp-patient-complaint').innerText = patientComplaint;
+
+    // Default sample transcript if none transcribed yet
+    let currentTranscript = sessionStorage.getItem('rx_transcript') || 
+      `Doctor: Namaste ${patientName} ji, bataiye kya takleef hai? ` +
+      `Patient: Doctor sahab do din se tez bukhar hai aur badan dard ho raha hai. ` +
+      `Doctor: Theek hai, 101 bukhar hai. Aapko Paracetamol 650 mg subah aur shaam khane ke baad leni hai teen din tak. ` +
+      `Khoob paani pijiye aur aaram kijiye. Agar bukhar na utre to do din baad dobara aana.`;
+
+    document.getElementById('transcript-box').value = currentTranscript;
+
+    if (audioBase64) {
+      document.getElementById('audio-player-container').classList.remove('hidden');
+      document.getElementById('audio-player').src = audioBase64;
+    }
+
+    async function startTranscription() {
+      const btn = document.getElementById('btn-transcribe');
+      const spinner = document.getElementById('transcribe-spinner');
+      const text = document.getElementById('transcribe-text');
+
+      btn.disabled = true;
+      spinner.classList.remove('hidden');
+      text.innerText = "Transcribing with Gnani Prisma...";
+
+      try {
+        const payload = {
+          audio_base64: audioBase64 || null,
+          scenario_id: audioBase64 ? null : "scenario_1",
+          gnani_key: localStorage.getItem('rx_gnani_key') || null
+        };
+
+        const res = await fetch("/api/transcribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success && data.transcript) {
+          currentTranscript = data.transcript;
+          document.getElementById('transcript-box').value = currentTranscript;
+          sessionStorage.setItem('rx_transcript', currentTranscript);
+          if (data.metadata?.latency) {
+            document.getElementById('disp-latency').innerText = `${data.metadata.latency}s`;
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        spinner.classList.add('hidden');
+        text.innerText = "Transcribe Audio with Prisma";
+      }
+    }
+
+    async function proceedToPrescription() {
+      const liveTranscript = document.getElementById('transcript-box').value.trim();
+      if (!liveTranscript) {
+        alert("Transcript is empty. Please transcribe or enter consultation text.");
+        return;
+      }
+
+      const btn = document.getElementById('btn-extract');
+      const spinner = document.getElementById('extract-spinner');
+      const text = document.getElementById('extract-text');
+
+      btn.disabled = true;
+      spinner.classList.remove('hidden');
+      text.innerText = "Extracting Clinical Entities...";
+
+      sessionStorage.setItem('rx_transcript', liveTranscript);
+
+      try {
+        const res = await fetch("/api/extract", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            transcript: liveTranscript,
+            llm_provider: localStorage.getItem('rx_llm_provider') || "Gemini",
+            api_key: localStorage.getItem('rx_llm_key') || null
+          })
+        });
+
+        const prescriptionData = await res.json();
+        // Override with patient details if missing
+        if (!prescriptionData.patient.name) prescriptionData.patient.name = patientName;
+        if (!prescriptionData.patient.age) prescriptionData.patient.age = parseInt(patientAge) || 42;
+        if (!prescriptionData.patient.gender) prescriptionData.patient.gender = patientGender;
+
+        sessionStorage.setItem('rx_prescription_json', JSON.stringify(prescriptionData));
+        window.location.href = '/prescription';
+
+      } catch (err) {
+        alert("Extraction failed: " + err.message);
+      } finally {
+        btn.disabled = false;
+        spinner.classList.add('hidden');
+        text.innerText = "Generate Clinical Draft & Review Prescription ➔";
+      }
+    }
+  </script>
+</body>
+</html>

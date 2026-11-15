@@ -1,0 +1,44 @@
+[
+  {
+    "id": "scenario_1",
+    "title": "Scenario 1: Acute Fever & Body Ache (Single Medicine)",
+    "audio_file": "samples/scenario_1_fever.wav",
+    "description": "30-sec clean consultation: Viral fever, Dolo/Paracetamol prescribed for 3 days.",
+    "transcript": "Doctor: Namaste Ramesh ji, bataiye kya takleef hai? Patient: Doctor sahab do din se tez bukhar hai aur badan dard ho raha hai. Doctor: Theek hai, thermometer check kiya? 101 bukhar hai. Aapko Paracetamol 650 mg subah aur shaam khane ke baad leni hai teen din tak. Khoob paani pijiye aur aaram kijiye. Agar bukhar na utre to do din baad dobara aana."
+  },
+  {
+    "id": "scenario_2",
+    "title": "Scenario 2: Pet Dard & Acidity (Multiple Medicines)",
+    "audio_file": "samples/scenario_2_acidity.wav",
+    "description": "Multi-drug regimen: Pantoprazole (empty stomach) + Domperidone + diet parhez.",
+    "transcript": "Doctor: Aaiye Sunita ji, kya pareshani hai? Patient: Doctor sahab pet mein bahut jalan aur acidity ho rahi hai do teen din se, ulti jaisa lagta hai. Doctor: Khaane mein tel masala zyada ho raha hai shayad. Main Pantoprazole 40 mg likh raha hoon, roz subah khali pet lena paanch din tak. Saath mein Domperidone 10 mg din mein do baar khane se aadha ghanta pehle. Teekha aur oily khana bilkul band rakhiye. Paanch din baad checkup ke liye aana."
+  },
+  {
+    "id": "scenario_3",
+    "title": "Scenario 3: Gale Mein Infection & Khansi (Hinglish Mix)",
+    "audio_file": "samples/scenario_3_chest_infection.wav",
+    "description": "Hinglish consultation: Azithromycin + Cetirizine + warm salt gargles.",
+    "transcript": "Doctor: Haan Amit, kya dikkat hai? Patient: Doctor sahab 4 din se gale mein dard hai aur khansi-jukam ho gaya hai, halka bukhar bhi hai. Doctor: Gale mein infection lag raha hai. Aapko Azithromycin 500 mg din mein ek baar khane ke baad leni hai 3 din tak. Saath mein Cetirizine 10 mg raat ko sone se pehle leni hai 5 din. Bukhar ke liye Paracetamol 500 mg jab zarurat ho. Gunguna paani pijiye aur namak ke garare kijiye. Agar aaraam na mile to CBC blood test karwana hoga."
+  },
+  {
+    "id": "scenario_4",
+    "title": "Scenario 4: Hypertension & Diabetes Routine Follow-up",
+    "audio_file": "samples/scenario_4_bp_diabetes.wav",
+    "description": "Chronic disease management: Telmisartan 40mg + Metformin 500mg + lifestyle advice.",
+    "transcript": "Doctor: Namaste Sharma ji, regular BP checkup ke liye aaye hain? Patient: Ji doctor sahab, thoda sir bhari rehta hai. Doctor: BP check kiya hai, 145 by 90 hai, thoda high hai. Aapki purani dawa Telmisartan 40 mg roz subah naashte ke baad continue kijiye. Aur diabetes ke liye Metformin 500 mg din mein do baar subah shaam khane ke baad. Namak kam kijiye, 30 minute brisk walk roz zaroori hai. Ek mahine baad fasting blood sugar check kara ke milna."
+  },
+  {
+    "id": "scenario_5",
+    "title": "Scenario 5: Skin Allergy & Rash",
+    "audio_file": "samples/scenario_5_skin_allergy.wav",
+    "description": "Allergic reaction: Levocetirizine for 7 days, avoiding soap and dust.",
+    "transcript": "Doctor: Namaste Priya ji, kya takleef hai? Patient: Doctor sahab haath aur gale par laal daane aur tez khujli ho rahi hai. Doctor: Ye allergic dermatitis lag raha hai. Aap Levocetirizine 5 mg roz raat ko ek goli lijiye 7 din tak. Saath mein Calamine lotion din mein do baar lagaiye. Teekha saaf paani use karein aur dhoop-dhool se bachiye."
+  },
+  {
+    "id": "scenario_6",
+    "title": "Scenario 6: Missing Duration / Uncertain Field Test",
+    "audio_file": "samples/scenario_6_missing_duration.wav",
+    "description": "Safety check test: Doctor forgets duration -> AI flags uncertain field for verification.",
+    "transcript": "Doctor: Namaste Vikas ji, kya dikkat hai? Patient: Doctor sahab gale mein kharash hai aur thoda bukhar hai. Doctor: Theek hai, main aapko Azithromycin 500 mg likh raha hoon din mein ek baar khana. Paracetamol 650 mg bhi lijiye jab bukhar ho. Patient: Theek hai doctor sahab, kitne din lena hai? Doctor: Haan wo aage dekhte hain, filhal aaram karo."
+  }
+]

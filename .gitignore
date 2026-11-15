@@ -1,0 +1,9 @@
+target/
+*.zip
+*.jar
+!**/src/main/**
+!**/src/test/**
+.mvn/
+*.class
+*.log
+rxvaani-ssl.p12

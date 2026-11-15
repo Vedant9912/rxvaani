@@ -1,0 +1,38 @@
+server:
+  port: ${PORT:8000}
+
+spring:
+  application:
+    name: rxvaani
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+rxvaani:
+  gnani:
+    api-key: ${GNANI_API_KEY:}
+    endpoint: ${GNANI_STT_ENDPOINT:https://api.vachana.ai/stt/v3}
+  llm:
+    gemini-api-key: ${GEMINI_API_KEY:}
+    openai-api-key: ${OPENAI_API_KEY:}
+    groq-api-key: ${GROQ_API_KEY:}
+    anthropic-api-key: ${ANTHROPIC_API_KEY:}
+  clinic:
+    doctor-name: "Dr. Vedant Sharma, MBBS, MD"
+    clinic-name: "Aarogya Clinic & Diagnostics"
+    clinic-address: "Shop 12, Health Square, MG Road, New Delhi | Ph: +91 98765 43210"
+    reg-number: "MCI-Reg: 84920/2019"
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.rxvaani: INFO
