@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/static/navbar.js"></script>
+  <script src="/navbar.js"></script>
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
     @keyframes pulse-wave { 0%, 100% { height: 6px; } 50% { height: 28px; } }
@@ -84,7 +84,7 @@
             <div class="px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-semibold flex items-center justify-between text-xs">
               <span>Hindi / Hinglish (Code-Mixed)</span>
               <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                Gnani Prisma v3.0
+                RxVaani AI
               </span>
             </div>
           </div>
@@ -182,17 +182,18 @@
   </main>
 
   <script>
+    // Variables pehle declare karo — TDZ se bachne ke liye
+    var activeMode = 'mic';
+    var audioBase64 = null;
+    var audioFileName = null;
+    var mediaRecorder = null;
+    var audioChunks = [];
+    var recordInterval = null;
+    var seconds = 0;
+
     // Init Navbar
     document.getElementById('navbar-container').innerHTML = renderNavbar('intake');
     document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-
-    let activeMode = 'mic';
-    let audioBase64 = null;
-    let audioFileName = null;
-    var mediaRecorder = null;
-    var audioChunks = [];
-    let recordInterval = null;
-    let seconds = 0;
 
     function setMode(mode) {
       activeMode = mode;

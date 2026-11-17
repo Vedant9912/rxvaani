@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/static/navbar.js"></script>
+  <script src="/navbar.js"></script>
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
     @keyframes pulse-wave { 0%, 100% { height: 6px; } 50% { height: 32px; } }
@@ -51,16 +51,16 @@
       <div class="flex items-center justify-between border-b border-slate-100 pb-4">
         <div>
           <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
-            <span>🎙️ Gnani Prisma Speech-to-Text Studio</span>
+            <span>🎙️ Clinical AI Speech-to-Text Studio</span>
           </h2>
           <p class="text-xs text-slate-500 mt-0.5">
-            Indian telephonic & noisy OPD speech recognition engine tuned for code-mixed Hindi & Hinglish.
+            AI-powered speech recognition tuned for Indian OPD consultations in Hindi & Hinglish.
           </p>
         </div>
 
         <button id="btn-transcribe" onclick="startTranscription()" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs transition shadow-md shadow-teal-600/20 flex items-center space-x-2">
           <span id="transcribe-spinner" class="hidden animate-spin">⏳</span>
-          <span id="transcribe-text">Transcribe Audio with Prisma</span>
+          <span id="transcribe-text">Transcribe Consultation Audio</span>
         </button>
       </div>
 
@@ -68,7 +68,7 @@
       <div id="metrics-bar" class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs text-slate-600 font-semibold flex-wrap gap-2">
         <div class="flex items-center space-x-2">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>Engine: <b class="text-slate-900">Gnani Prisma v3.0</b></span>
+          <span>Engine: <b class="text-slate-900">RxVaani AI STT</b></span>
         </div>
         <div>Language: <b class="text-slate-900">hi-IN (Colloquial Hinglish)</b></div>
         <div>Latency: <b class="text-emerald-700 font-mono" id="disp-latency">0.38s</b></div>
@@ -91,7 +91,7 @@
         <textarea
           id="transcript-box"
           rows="7"
-          placeholder="Transcription will stream here once you click 'Transcribe Audio with Prisma'..."
+          placeholder="Transcription will appear here once you click 'Transcribe Consultation Audio'..."
           class="w-full p-4 rounded-xl border border-slate-200 text-slate-900 text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-sky-500 bg-slate-50/50"
         ></textarea>
       </div>
@@ -147,13 +147,13 @@
 
       btn.disabled = true;
       spinner.classList.remove('hidden');
-      text.innerText = "Transcribing with Gnani Prisma...";
+      text.innerText = "Processing audio...";
 
       try {
         const payload = {
           audio_base64: audioBase64 || null,
           scenario_id: audioBase64 ? null : "scenario_1",
-          gnani_key: localStorage.getItem('rx_gnani_key') || null
+          stt_key: null
         };
 
         const res = await fetch("/api/transcribe", {
@@ -166,6 +166,8 @@
           currentTranscript = data.transcript;
           document.getElementById('transcript-box').value = currentTranscript;
           sessionStorage.setItem('rx_transcript', currentTranscript);
+          // Save English translation for LLM (if available), else use Hinglish
+          sessionStorage.setItem('rx_transcript_en', data.transcript_en || data.transcript);
           if (data.metadata?.latency) {
             document.getElementById('disp-latency').innerText = `${data.metadata.latency}s`;
           }
@@ -175,7 +177,7 @@
       } finally {
         btn.disabled = false;
         spinner.classList.add('hidden');
-        text.innerText = "Transcribe Audio with Prisma";
+        text.innerText = "Transcribe Consultation Audio";
       }
     }
 
@@ -201,7 +203,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            transcript: liveTranscript,
+            transcript: sessionStorage.getItem('rx_transcript_en') || liveTranscript,
             llm_provider: localStorage.getItem('rx_llm_provider') || "Gemini",
             api_key: localStorage.getItem('rx_llm_key') || null
           })

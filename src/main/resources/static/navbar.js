@@ -27,7 +27,7 @@ function renderNavbar(activePage) {
               <span class="text-xl font-extrabold tracking-tight text-slate-900">RxVaani</span>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center space-x-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Gnani Prisma v3.0</span>
+                <span>AI Powered</span>
               </span>
             </div>
             <p class="text-[11px] text-slate-500 font-medium hidden sm:block">

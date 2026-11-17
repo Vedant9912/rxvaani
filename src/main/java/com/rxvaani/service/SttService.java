@@ -21,6 +21,9 @@ public class SttService {
     @Value("${rxvaani.gnani.endpoint:https://api.vachana.ai/stt/v3}")
     private String gnaniEndpoint;
 
+    @Value("${rxvaani.llm.groq-api-key:}")
+    private String groqApiKey;
+
     private final WebClient webClient;
     private final ObjectMapper objectMapper;
     private List<Map<String, Object>> scenarios = new ArrayList<>();
@@ -77,6 +80,10 @@ public class SttService {
         if (req.getAudioBase64() != null && !req.getAudioBase64().isBlank()) {
             String key = req.getGnaniKey() != null ? req.getGnaniKey() : gnaniApiKey;
             if (key == null || key.isBlank()) {
+                // Try Groq Whisper if Gnani key not available
+                if (groqApiKey != null && !groqApiKey.isBlank()) {
+                    return callGroqWhisper(req.getAudioBase64(), req.getFilename());
+                }
                 return mockTranscription(req.getFilename());
             }
             return callGnaniApi(req.getAudioBase64(), req.getFilename(), key);
@@ -84,6 +91,65 @@ public class SttService {
 
         // Default fallback
         return mockTranscription("default");
+    }
+
+    private Map<String, Object> callGroqWhisper(String audioBase64, String filename) {
+        try {
+            String raw = audioBase64.contains(",") ? audioBase64.split(",")[1] : audioBase64;
+            byte[] audioBytes = Base64.getDecoder().decode(raw);
+            String fn = (filename != null && !filename.isBlank()) ? filename : "audio.wav";
+
+            // ── Call 1: Transcription (original language for display) ──────────
+            org.springframework.core.io.ByteArrayResource res1 =
+                new org.springframework.core.io.ByteArrayResource(audioBytes) {
+                    @Override public String getFilename() { return fn; }
+                };
+            org.springframework.util.MultiValueMap<String, Object> b1 =
+                new org.springframework.util.LinkedMultiValueMap<>();
+            b1.add("file", new org.springframework.http.HttpEntity<>(res1, org.springframework.http.HttpHeaders.EMPTY));
+            b1.add("model", "whisper-large-v3");
+            b1.add("response_format", "json");
+
+            String r1 = webClient.post()
+                .uri("https://api.groq.com/openai/v1/audio/transcriptions")
+                .header("Authorization", "Bearer " + groqApiKey)
+                .contentType(org.springframework.http.MediaType.MULTIPART_FORM_DATA)
+                .bodyValue(b1).retrieve().bodyToMono(String.class).block();
+            String hinglishText = objectMapper.readTree(r1).path("text").asText("");
+
+            // ── Call 2: Translation → English (for LLM extraction) ────────────
+            org.springframework.core.io.ByteArrayResource res2 =
+                new org.springframework.core.io.ByteArrayResource(audioBytes) {
+                    @Override public String getFilename() { return fn; }
+                };
+            org.springframework.util.MultiValueMap<String, Object> b2 =
+                new org.springframework.util.LinkedMultiValueMap<>();
+            b2.add("file", new org.springframework.http.HttpEntity<>(res2, org.springframework.http.HttpHeaders.EMPTY));
+            b2.add("model", "whisper-large-v3");
+            b2.add("response_format", "json");
+
+            String r2 = webClient.post()
+                .uri("https://api.groq.com/openai/v1/audio/translations")
+                .header("Authorization", "Bearer " + groqApiKey)
+                .contentType(org.springframework.http.MediaType.MULTIPART_FORM_DATA)
+                .bodyValue(b2).retrieve().bodyToMono(String.class).block();
+            String englishText = objectMapper.readTree(r2).path("text").asText("");
+
+            return Map.of(
+                "transcript",    hinglishText,   // shown to doctor in UI
+                "transcript_en", englishText,    // used by LLM
+                "success", true,
+                "metadata", Map.of(
+                    "model", "Groq Whisper Large v3",
+                    "detected_language", "hi-IN",
+                    "latency", 0.0,
+                    "demo_mode", false
+                )
+            );
+        } catch (Exception e) {
+            return Map.of("transcript", "", "success", false,
+                "error", "Groq Whisper error: " + e.getMessage());
+        }
     }
 
     private Map<String, Object> callGnaniApi(String audioBase64, String filename, String key) {

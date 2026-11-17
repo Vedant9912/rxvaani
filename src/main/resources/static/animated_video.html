@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="/static/navbar.js"></script>
+<script src="/navbar.js"></script>
 <style>
   body{font-family:'Plus Jakarta Sans',sans-serif;background:#F1F5F9}
   #cv{display:block;width:100%;border-radius:14px;border:2px solid #CBD5E1;
@@ -28,7 +28,7 @@
       <div>
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold mb-2">
           <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
-          <span>Gnani AI Internship Challenge &nbsp;•&nbsp; RxVaani Demo</span>
+          <span>RxVaani Demo</span>
         </div>
         <h1 class="text-2xl font-black text-slate-900">🎬 Animated Explainer Video Generator</h1>
         <p class="text-sm text-slate-500 mt-1">
@@ -158,7 +158,7 @@ function topBar(ctx, name, idx) {
   ctx.fillStyle=g; rr(ctx,24,16,44,44,10); ctx.fill();
   txt(ctx,'℞',46,38,'bold 24px serif','#fff','center','middle');
   txt(ctx,'RxVaani',78,30,'bold 19px Plus Jakarta Sans','#0F172A');
-  txt(ctx,'AI Clinical Prescription Scribe — Gnani AI Prisma v3.0',78,50,'13px Plus Jakarta Sans',C.s500);
+  txt(ctx,'AI Clinical Prescription Scribe',78,50,'13px Plus Jakarta Sans',C.s500);
 
   // Right badge
   const badge=`Scene ${idx+1}/8  •  ${name}`;
@@ -211,10 +211,10 @@ function scene0(ctx, t, dur) {   // ── Title Card ──
   gr.addColorStop(0,C.sky); gr.addColorStop(.5,C.teal); gr.addColorStop(1,C.indigo);
   ctx.fillStyle=gr; ctx.font='bold 34px Plus Jakarta Sans'; ctx.textAlign='center';
   ctx.fillText('AI Clinical Prescription Scribe',W/2,278);
-  txt(ctx,'Built for Indian Healthcare  •  Gnani AI Internship Challenge',W/2,316,'20px Plus Jakarta Sans',C.s500,'center');
+  txt(ctx,'Built for Indian Healthcare',W/2,316,'20px Plus Jakarta Sans',C.s500,'center');
 
   // Stat pills
-  const stats=[['90s','Consult → PDF'],['<400ms','Prisma STT'],['100%','Doctor Control']];
+  const stats=[['90s','Consult → PDF'],['<400ms','AI STT'],['100%','Doctor Control']];
   const pw=210, ph=68, sx=W/2-((pw+22)*3-22)/2;
   stats.forEach(([v,l],i)=>{
     const px=sx+i*(pw+22), py=360;
@@ -225,7 +225,7 @@ function scene0(ctx, t, dur) {   // ── Title Card ──
 
   // Challenge badge
   fillBox(ctx,W/2-240,460,480,36,18,'#F0FFF4'); strokeBox(ctx,W/2-240,460,480,36,18,'#86EFAC',1);
-  txt(ctx,'🏆  Great Indian AI Internship Challenge  •  Gnani AI',W/2,484,'bold 13px Plus Jakarta Sans','#15803D','center','middle');
+  txt(ctx,'🏆  RxVaani — AI Clinical Prescription Scribe',W/2,484,'bold 13px Plus Jakarta Sans','#15803D','center','middle');
   ctx.restore();
 }
 
@@ -272,7 +272,7 @@ function scene2(ctx, t, dur) {   // ── Solution Flow ──
   const steps=[
     {icon:'🎙️',label:'Capture',sub:'Hinglish
 ambient audio',col:C.sky},
-    {icon:'📡',label:'Transcribe',sub:'Gnani Prisma
+    {icon:'📡',label:'Transcribe',sub:'RxVaani AI
 STT Codemix',col:C.indigo},
     {icon:'🧬',label:'Extract',sub:'Meds, Diagnosis
 & Instructions',col:C.teal},
@@ -303,12 +303,12 @@ PDF Rx',col:C.emerald},
   ctx.restore();
 }
 
-function scene3(ctx, t, dur) {   // ── Gnani Prisma STT ──
+function scene3(ctx, t, dur) {   // ── AI STT ──
   ctx.fillStyle='#F0F4FF'; ctx.fillRect(0,68,W,H-140);
   const p=p01(t,0,900);
   ctx.save(); ctx.globalAlpha=p;
-  txt(ctx,'Gnani AI Prisma STT v3.0',52,118,'bold 42px Plus Jakarta Sans',C.s900);
-  txt(ctx,'Codemix ASR — Sub-400ms latency — Hindi × English',52,146,'15px Plus Jakarta Sans',C.indigo);
+  txt(ctx,'RxVaani AI Speech-to-Text',52,118,'bold 42px Plus Jakarta Sans',C.s900);
+  txt(ctx,'Hindi & Hinglish Codemix — Sub-400ms Latency',52,146,'15px Plus Jakarta Sans',C.indigo);
 
   // Terminal
   const tp=p01(t,350,700);
@@ -316,13 +316,13 @@ function scene3(ctx, t, dur) {   // ── Gnani Prisma STT ──
   fillBox(ctx,52,165,590,290,14,'#1E1E2E'); strokeBox(ctx,52,165,590,290,14,C.indigo,1.5);
   fillBox(ctx,52,165,590,32,10,'#2D2B55'); ctx.fillStyle='#2D2B55'; ctx.fillRect(52,185,590,12);
   ['#FF5F57','#FFBD2E','#28CA41'].forEach((c,i)=>{ ctx.fillStyle=c; rr(ctx,70+i*20,174,12,12,6); ctx.fill(); });
-  txt(ctx,'api.vachana.ai/stt/v3  –  X-API-Key-ID: ••••',332,195,'11px JetBrains Mono','#8B8FA8','center');
+  txt(ctx,'RxVaani STT Engine  –  Secure API',332,195,'11px JetBrains Mono','#8B8FA8','center');
 
   const lines=[
     {tag:'Patient:',  tc:'#79C0FF', rest:' Namaste doctor sahab, teen din se tez bukhar hai...'},
     {tag:'Doctor:',   tc:'#56D364', rest:' Thik hai. Temperature 101. Paracetamol 650mg subah shaam.'},
     {tag:'',          tc:'#C9D1D9', rest:' Azithromycin 500mg, ek goli roz teen din tak.'},
-    {tag:'[Prisma]',  tc:'#E2B340', rest:' format=codemix | lang=hi-IN,en-IN'},
+    {tag:'[RxVaani]', tc:'#E2B340', rest:' format=codemix | lang=hi-IN,en-IN'},
     {tag:'[Conf]',    tc:'#56D364', rest:' Paracetamol 650mg → 98.4%  |  Azithromycin 500mg → 96.1%'},
     {tag:'[Match]',   tc:'#79C0FF', rest:' Levenshtein fuzzy: "paras tamol" → "Paracetamol" ✓'},
   ];
@@ -342,8 +342,8 @@ function scene3(ctx, t, dur) {   // ── Gnani Prisma STT ──
   const sp=p01(t,500,600);
   ctx.globalAlpha=sp;
   const specs=[
-    {k:'API Endpoint', v:'api.vachana.ai/stt/v3', c:C.indigo},
-    {k:'Auth Header',  v:'X-API-Key-ID',           c:C.sky},
+    {k:'STT Engine',    v:'RxVaani AI Codemix STT',   c:C.indigo},
+    {k:'Auth Mode',     v:'Secure API Token',          c:C.sky},
     {k:'Mode',         v:'codemix (Hindi + English)',c:C.teal},
     {k:'Languages',    v:'hi-IN, en-IN',            c:C.emerald},
     {k:'Latency',      v:'< 400 milliseconds',      c:C.amber},
@@ -504,9 +504,9 @@ function scene7(ctx, t, dur) {   // ── Architecture & CTA ──
 REST Backend',col:C.sky},
     {icon:'☕',name:'Spring Boot',sub:'Java 21
 Enterprise Layer',col:'#C65F02'},
-    {icon:'🧠',name:'Gemini Flash',sub:'LLM Clinical
+    {icon:'🧠',name:'RxVaani AI',sub:'LLM Clinical
 Extraction',col:C.indigo},
-    {icon:'🔊',name:'Gnani Prisma',sub:'Codemix STT
+    {icon:'🔊',name:'RxVaani STT',sub:'AI Codemix
 v3.0',col:C.teal},
     {icon:'📄',name:'ReportLab',sub:'PDF Engine
 NMC Compliant',col:C.emerald},
@@ -545,13 +545,13 @@ NMC Compliant',col:C.emerald},
 // ── Scene manifest ────────────────────────────────────────────
 const SCENES = [
   {id:0,name:'Title Card',      dur:5500, draw:scene0,
-   narr:'Welcome to RxVaani — the AI-powered clinical prescription scribe built for Indian healthcare. Developed for the Great Indian AI Internship Challenge, powered by Gnani AI.'},
+   narr:'Welcome to RxVaani — the AI-powered clinical prescription scribe built for Indian healthcare, designed to transform OPD workflows across India.'},
   {id:1,name:'The Problem',     dur:7000, draw:scene1,
    narr:'Indian doctors examine up to 80 patients daily. Over 40 percent of consultation time is wasted writing prescriptions by hand. Illegible handwriting causes dangerous pharmacy errors, and Western voice tools completely fail on Hindi and Hinglish speech.'},
   {id:2,name:'Solution Flow',   dur:6000, draw:scene2,
-   narr:'RxVaani solves this end to end. It listens to natural Hindi and Hinglish doctor-patient conversations, transcribes them in real time using Gnani AI Prisma, extracts clinical entities, and generates a verified prescription — all in under 90 seconds.'},
-  {id:3,name:'Gnani Prisma STT',dur:7000, draw:scene3,
-   narr:'At the deep-tech core is Gnani AI Prisma version 3, a state-of-the-art speech-to-text engine built for Indian code-mixed speech. Using the codemix API in format codemix, it perfectly handles Hindi-English mixing, preserving drug names and dosages with sub-400 millisecond latency.'},
+   narr:'RxVaani solves this end to end. It listens to natural Hindi and Hinglish doctor-patient conversations, transcribes them in real time using its AI speech engine, extracts clinical entities, and generates a verified prescription — all in under 90 seconds.'},
+  {id:3,name:'RxVaani AI STT',   dur:7000, draw:scene3,
+   narr:'At the deep-tech core is RxVaani AI Speech-to-Text — a specialized engine built for Indian code-mixed speech. It perfectly handles Hindi-English mixing, preserving drug names and dosages with sub-400 millisecond latency.'},
   {id:4,name:'Extraction',      dur:7000, draw:scene4,
    narr:"RxVaani's clinical AI engine extracts chief complaints, vital signs, diagnosis, and medications. A fuzzy matching algorithm cross-references extracted drug names against a curated Indian formulary of over 50 pharmaceuticals using Levenshtein distance matching."},
   {id:5,name:'Safety',          dur:7000, draw:scene5,
@@ -584,14 +584,19 @@ function loadVoices(){
 }
 function pickV(all){
   const try1=v=>all.find(x=>x.lang==='en-US'&&x.name.toLowerCase().includes(v));
-  selectedVoice=try1('natural')||try1('jenny')||try1('guy')||try1('aria')||
+  const tryAny=v=>all.find(x=>x.name.toLowerCase().includes(v));
+  selectedVoice=
+    try1('zira')||try1('jenny')||try1('aria')||try1('samantha')||
+    try1('karen')||try1('victoria')||try1('susan')||try1('female')||
+    tryAny('zira')||tryAny('jenny')||tryAny('aria')||tryAny('samantha')||
+    all.find(x=>x.lang==='en-US'&&x.name.toLowerCase().includes('f'))||
     all.find(x=>x.lang==='en-US')||all.find(x=>x.lang.startsWith('en'))||all[0];
 }
 function speak(text){
   return new Promise(res=>{
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
-    u.lang='en-US'; u.rate=0.94; u.pitch=1.0;
+    u.lang='en-US'; u.rate=0.90; u.pitch=1.1;
     if(selectedVoice) u.voice=selectedVoice;
     u.onend=res; u.onerror=res;
     speechSynthesis.speak(u);
