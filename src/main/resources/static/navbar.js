@@ -5,7 +5,6 @@ function renderNavbar(activePage) {
 
   const navItems = [
     { id: 'home', label: 'Home', path: '/', icon: '🏠' },
-    { id: 'video', label: 'Video Demo', path: '/video', icon: '🎬' },
     { id: 'consultation', label: 'OPD Room', path: '/consultation', icon: '🩺' },
     { id: 'studio', label: 'Voice Studio', path: '/studio', icon: '🎙️' },
     { id: 'prescription', label: 'Prescription Pad', path: '/prescription', icon: '📄' },

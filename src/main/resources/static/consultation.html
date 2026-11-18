@@ -213,7 +213,8 @@
     async function startRecording() {
       try {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          alert("❌ Microphone API available nahi hai!\n\nSolution:\n1. https://localhost:8443 pe jaao\n2. Chrome warning pe 'Advanced → Proceed to localhost' click karo\n3. Phir dubara try karo");
+          setMode('upload');
+          alert("⚠️ Microphone not available.\n\nPlease use the 'Upload Consultation File' tab instead.");
           return;
         }
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -246,11 +247,11 @@
         }, 1000);
       } catch (err) {
         if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-          alert("❌ Microphone access blocked!\n\nFix karo:\n1. Address bar mein 🔒 icon click karo\n2. Microphone → Allow karo\n3. Page reload karo");
+          alert("⚠️ Microphone access denied.\n\nClick the lock icon in the address bar, allow microphone, and reload the page.");
         } else if (err.name === 'NotFoundError') {
-          alert("❌ Koi microphone connected nahi hai. Microphone connect karke retry karo.");
+          alert("⚠️ No microphone detected.\n\nPlease connect a microphone and try again, or use the File Upload option.");
         } else {
-          alert("Microphone Error: " + err.name + " - " + err.message);
+          alert("Microphone error: " + err.message + "\n\nTry using the File Upload option instead.");
         }
       }
     }
