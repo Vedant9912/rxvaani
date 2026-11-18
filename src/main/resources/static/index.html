@@ -10,83 +10,82 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/navbar.js"></script>
+  <link rel="stylesheet" href="/rxvaani-theme.css">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
-    @keyframes pulse-wave { 0%, 100% { height: 8px; } 50% { height: 36px; } }
-    .wave-bar { width: 4px; border-radius: 9999px; background: linear-gradient(to top, #0284C7, #0D9488); animation: pulse-wave 1.1s ease-in-out infinite; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-900">
+<body class="min-h-screen flex flex-col" style="background:#000000;color:#F8FAFC;">
 
   <!-- Navbar -->
   <div id="navbar-container"></div>
 
   <!-- Hero Section -->
-  <section class="relative overflow-hidden pt-12 pb-20 bg-gradient-to-b from-white via-slate-50 to-slate-100 border-b border-slate-200">
+  <section class="relative overflow-hidden pt-16 pb-24" style="background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(14,165,233,0.13) 0%,transparent 70%),#000000;border-bottom:1px solid #26364D;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="text-center max-w-3xl mx-auto space-y-6">
+      <div class="text-center max-w-3xl mx-auto space-y-6 anim-fadein">
         
-        <!-- Challenge Badge -->
-        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-xs font-bold shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+        <!-- Badge -->
+        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-bold" style="background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.25);color:#38BDF8;">
+          <span class="w-2 h-2 rounded-full animate-pulse" style="background:#0EA5E9;"></span>
           <span>AI Clinical EHR &amp; Prescription Scribe • Built for Indian Healthcare</span>
         </div>
 
         <!-- Headline -->
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight">
-          From Consultation Speech to <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-teal-500">Approved Prescription</span> in Seconds.
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight" style="color:#F8FAFC;">
+          From Consultation Speech to <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-teal-400">Approved Prescription</span> in Seconds.
         </h1>
 
         <!-- Subtitle -->
-        <p class="text-base sm:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto">
-          RxVaani listens to natural <b>Hindi and Hinglish</b> doctor-patient conversations, standardizes colloquial medical phrasing, and drafts clinical prescriptions while keeping the doctor in 100% control.
+        <p class="text-base sm:text-lg font-medium leading-relaxed max-w-2xl mx-auto" style="color:#94A3B8;">
+          RxVaani listens to natural <b style="color:#F8FAFC;">Hindi and Hinglish</b> doctor-patient conversations, standardizes colloquial medical phrasing, and drafts clinical prescriptions while keeping the doctor in 100% control.
         </p>
 
         <!-- CTA Buttons -->
-        <div class="pt-4 flex items-center justify-center space-x-4 flex-wrap gap-y-3">
-          <a href="/consultation" class="px-8 py-4 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-sky-600/30 transition transform hover:-translate-y-0.5 flex items-center space-x-2">
+        <div class="pt-4 flex items-center justify-center space-x-4 flex-wrap gap-y-3 anim-fadein-2">
+          <a href="/consultation" class="px-8 py-4 rounded-2xl font-extrabold text-sm sm:text-base transition transform hover:-translate-y-0.5 flex items-center space-x-2" style="background:#0EA5E9;color:#fff;box-shadow:0 0 32px rgba(14,165,233,0.35);">
             <span>Let's Start</span>
             <span class="text-lg">➔</span>
           </a>
-          <a href="#features" class="px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-sm shadow-xs transition">
-            Features & Safety
+          <a href="#features" class="px-6 py-4 rounded-2xl font-bold text-sm transition" style="background:#162338;border:1px solid #26364D;color:#94A3B8;">
+            Features &amp; Safety
           </a>
         </div>
 
         <!-- Trust Points -->
-        <div class="pt-6 flex items-center justify-center space-x-6 text-xs text-slate-500 font-semibold flex-wrap gap-y-2">
+        <div class="pt-6 flex items-center justify-center space-x-6 text-xs font-semibold flex-wrap gap-y-2" style="color:#475569;">
           <span class="flex items-center space-x-1.5">
-            <span class="text-emerald-500 font-bold">✓</span>
+            <span style="color:#10B981;font-weight:700;">✓</span>
             <span>Zero Hallucinations (Doctor-in-the-Loop)</span>
           </span>
           <span class="flex items-center space-x-1.5">
-            <span class="text-emerald-500 font-bold">✓</span>
-            <span>Hinglish & Telephonic STT</span>
+            <span style="color:#10B981;font-weight:700;">✓</span>
+            <span>Hinglish &amp; Telephonic STT</span>
           </span>
           <span class="flex items-center space-x-1.5">
-            <span class="text-emerald-500 font-bold">✓</span>
+            <span style="color:#10B981;font-weight:700;">✓</span>
             <span>Instant Official PDF Export</span>
           </span>
         </div>
 
       </div>
 
-      <!-- Hero Visual Interactive Mockup Card -->
-      <div class="mt-14 max-w-4xl mx-auto bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-xl shadow-slate-200/50">
+      <!-- Hero Visual Mockup Card -->
+      <div class="mt-14 max-w-4xl mx-auto rounded-3xl p-6 md:p-8 anim-fadein-3" style="background:#111C2E;border:1px solid #26364D;box-shadow:0 24px 64px rgba(0,0,0,0.5);">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           
           <!-- Left: Spoken Speech Visualizer -->
-          <div class="bg-slate-900 text-white p-6 rounded-2xl space-y-4 shadow-inner">
+          <div class="text-white p-6 rounded-2xl space-y-4" style="background:#000000;border:1px solid #26364D;">
             <div class="flex items-center justify-between text-xs">
-              <span class="text-sky-400 font-bold flex items-center space-x-1.5">
-                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+              <span style="color:#38BDF8;font-weight:700;" class="flex items-center space-x-1.5">
+                <span class="w-2 h-2 rounded-full animate-ping" style="background:#EF4444;"></span>
                 <span>Doctor Consultation Audio (Hinglish)</span>
               </span>
-              <span class="text-emerald-400 font-mono text-[11px]">AI STT 0.38s</span>
+              <span style="color:#10B981;font-family:monospace;font-size:0.6875rem;font-weight:700;">AI STT 0.38s</span>
             </div>
 
-            <!-- Waveform Animation -->
+            <!-- Waveform -->
             <div class="flex items-center justify-center space-x-1.5 h-12">
               <div class="wave-bar" style="animation-delay: 0.1s"></div>
               <div class="wave-bar" style="animation-delay: 0.3s"></div>
@@ -98,48 +97,48 @@
               <div class="wave-bar" style="animation-delay: 0.5s"></div>
             </div>
 
-            <p class="text-xs text-slate-300 italic leading-relaxed bg-slate-950/80 p-3 rounded-xl border border-slate-800">
-              "Doctor: 101 bukhar hai. Paracetamol 650 mg <b class="text-sky-300">subah-shaam</b> khane ke baad teen din tak lijiye..."
+            <p class="text-xs italic leading-relaxed p-3 rounded-xl" style="color:#CBD5E1;background:rgba(0,0,0,0.4);border:1px solid #26364D;">
+              "Doctor: 101 bukhar hai. Paracetamol 650 mg <b style="color:#38BDF8;">subah-shaam</b> khane ke baad teen din tak lijiye..."
             </p>
 
-            <div class="text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800 pt-2">
+            <div class="text-xs flex items-center justify-between pt-1" style="border-top:1px solid #26364D;padding-top:0.5rem;color:#475569;">
               <span>Automatic Phrase Normalization</span>
-              <span class="text-teal-400 font-bold">"subah-shaam" ➔ BD (Twice daily)</span>
+              <span style="color:#2DD4BF;font-weight:700;">"subah-shaam" ➔ BD (Twice daily)</span>
             </div>
           </div>
 
-          <!-- Right: Resulting Prescription Preview -->
-          <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl space-y-3.5">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+          <!-- Right: Prescription Preview -->
+          <div class="p-6 rounded-2xl space-y-3.5" style="background:#0F172A;border:1px solid #26364D;">
+            <div class="flex items-center justify-between pb-2" style="border-bottom:1px solid #26364D;">
               <div>
-                <div class="text-xs font-bold text-slate-900">Aarogya Clinic & Diagnostics</div>
-                <div class="text-[10px] text-slate-500">MCI-Reg: 84920/2019</div>
+                <div class="text-xs font-bold" style="color:#F8FAFC;">Aarogya Clinic &amp; Diagnostics</div>
+                <div style="font-size:0.625rem;color:#475569;">MCI-Reg: 84920/2019</div>
               </div>
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                ✓ Signed & Approved
+              <span style="font-size:0.625rem;font-weight:700;padding:0.125rem 0.5rem;border-radius:9999px;background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3);">
+                ✓ Signed &amp; Approved
               </span>
             </div>
 
             <div class="text-xs space-y-1">
-              <div class="font-bold text-slate-900">Patient: Ramesh Kumar (42M)</div>
-              <div class="text-slate-600 text-[11px]">Diagnosis: Acute Febrile Illness (Viral Fever)</div>
+              <div class="font-bold" style="color:#F8FAFC;">Patient: Ramesh Kumar (42M)</div>
+              <div style="font-size:0.6875rem;color:#94A3B8;">Diagnosis: Acute Febrile Illness (Viral Fever)</div>
             </div>
 
             <!-- Mini Meds Table -->
-            <div class="bg-white border border-slate-200 rounded-xl p-2.5 text-xs space-y-1">
-              <div class="flex justify-between font-bold text-slate-800">
+            <div class="p-2.5 text-xs space-y-1 rounded-xl" style="background:#162338;border:1px solid #26364D;">
+              <div class="flex justify-between font-bold" style="color:#F8FAFC;">
                 <span>Paracetamol 650 mg</span>
-                <span class="text-sky-700">1 tab • BD</span>
+                <span style="color:#38BDF8;">1 tab • BD</span>
               </div>
-              <div class="flex justify-between text-[11px] text-slate-500">
+              <div class="flex justify-between" style="font-size:0.6875rem;color:#475569;">
                 <span>Timing: After food</span>
                 <span>Duration: 3 days</span>
               </div>
             </div>
 
-            <div class="pt-2 text-[11px] text-slate-500 flex items-center justify-between">
+            <div class="pt-2 flex items-center justify-between" style="font-size:0.6875rem;color:#475569;">
               <span>Official ReportLab Vector PDF</span>
-              <span class="text-sky-600 font-bold">1-Click Download</span>
+              <span style="color:#0EA5E9;font-weight:700;">1-Click Download</span>
             </div>
           </div>
 
@@ -150,43 +149,43 @@
   </section>
 
   <!-- Impact Numbers Section -->
-  <section class="py-12 bg-white border-b border-slate-200">
+  <section class="py-12" style="background:#0F172A;border-bottom:1px solid #26364D;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         <div class="p-4">
-          <div class="text-3xl sm:text-4xl font-black text-sky-600">35%+</div>
-          <div class="text-xs font-bold text-slate-700 mt-1">Consultation Time Saved</div>
-          <div class="text-[11px] text-slate-400">More time for face-to-face care</div>
+          <div class="text-3xl sm:text-4xl font-black" style="color:#0EA5E9;">35%+</div>
+          <div class="text-xs font-bold mt-1" style="color:#F8FAFC;">Consultation Time Saved</div>
+          <div style="font-size:0.6875rem;color:#475569;">More time for face-to-face care</div>
         </div>
         <div class="p-4">
-          <div class="text-3xl sm:text-4xl font-black text-teal-600">&lt;0.4s</div>
-          <div class="text-xs font-bold text-slate-700 mt-1">STT Transcription Latency</div>
-          <div class="text-[11px] text-slate-400">Real-time telephonic streaming</div>
+          <div class="text-3xl sm:text-4xl font-black" style="color:#14B8A6;">&lt;0.4s</div>
+          <div class="text-xs font-bold mt-1" style="color:#F8FAFC;">STT Transcription Latency</div>
+          <div style="font-size:0.6875rem;color:#475569;">Real-time telephonic streaming</div>
         </div>
         <div class="p-4">
-          <div class="text-3xl sm:text-4xl font-black text-indigo-600">50+</div>
-          <div class="text-xs font-bold text-slate-700 mt-1">Indian Pharma Fuzzy Matcher</div>
-          <div class="text-[11px] text-slate-400">Corrects phonetic mishearings</div>
+          <div class="text-3xl sm:text-4xl font-black" style="color:#818CF8;">50+</div>
+          <div class="text-xs font-bold mt-1" style="color:#F8FAFC;">Indian Pharma Fuzzy Matcher</div>
+          <div style="font-size:0.6875rem;color:#475569;">Corrects phonetic mishearings</div>
         </div>
         <div class="p-4">
-          <div class="text-3xl sm:text-4xl font-black text-emerald-600">100%</div>
-          <div class="text-xs font-bold text-slate-700 mt-1">Doctor-in-the-Loop Safety</div>
-          <div class="text-[11px] text-slate-400">Zero unverified prescriptions</div>
+          <div class="text-3xl sm:text-4xl font-black" style="color:#10B981;">100%</div>
+          <div class="text-xs font-bold mt-1" style="color:#F8FAFC;">Doctor-in-the-Loop Safety</div>
+          <div style="font-size:0.6875rem;color:#475569;">Zero unverified prescriptions</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Key Features Section -->
-  <section id="features" class="py-20 bg-slate-50">
+  <section id="features" class="py-20" style="background:#0B1220;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
       
       <div class="text-center max-w-2xl mx-auto">
-        <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Engineered for Indian OPD Realities</span>
-        <h2 class="text-3xl font-black text-slate-900 tracking-tight mt-1">
+        <span class="text-xs font-bold uppercase tracking-wider" style="color:#0EA5E9;">Engineered for Indian OPD Realities</span>
+        <h2 class="text-3xl font-black tracking-tight mt-1" style="color:#F8FAFC;">
           Everything Doctors Need for Effortless Prescription Scribing
         </h2>
-        <p class="text-xs text-slate-500 font-medium mt-2">
+        <p class="text-xs font-medium mt-2" style="color:#475569;">
           Designed to eliminate administrative burn-out while upholding the highest medical safety standards.
         </p>
       </div>
@@ -194,68 +193,50 @@
       <!-- Feature Cards Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- Feature 1 -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-3 hover:shadow-md transition">
-          <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl font-bold">
-            🎙️
-          </div>
-          <h3 class="text-base font-bold text-slate-900">AI-Powered Clinical STT</h3>
-          <p class="text-xs text-slate-600 leading-relaxed font-medium">
+        <div class="rounded-2xl p-6 space-y-3 transition hover:-translate-y-0.5" style="background:#111C2E;border:1px solid #26364D;transition:border-color .25s,box-shadow .25s,transform .25s;" onmouseenter="this.style.borderColor='rgba(14,165,233,0.35)';this.style.boxShadow='0 0 24px rgba(14,165,233,0.08)'" onmouseleave="this.style.borderColor='#26364D';this.style.boxShadow='none'">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold" style="background:rgba(14,165,233,0.1);color:#38BDF8;">🎙️</div>
+          <h3 class="text-base font-bold" style="color:#F8FAFC;">AI-Powered Clinical STT</h3>
+          <p class="text-xs leading-relaxed font-medium" style="color:#94A3B8;">
             Specialized speech recognition trained on Indian accents, noisy OPD acoustic environments, and bilingual code-mixing for accurate Hindi &amp; Hinglish transcription.
           </p>
         </div>
 
-        <!-- Feature 2 -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-3 hover:shadow-md transition">
-          <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xl font-bold">
-            🗣️
-          </div>
-          <h3 class="text-base font-bold text-slate-900">Colloquial Phrase Mapping</h3>
-          <p class="text-xs text-slate-600 leading-relaxed font-medium">
+        <div class="rounded-2xl p-6 space-y-3" style="background:#111C2E;border:1px solid #26364D;transition:border-color .25s,box-shadow .25s,transform .25s;" onmouseenter="this.style.borderColor='rgba(14,165,233,0.35)';this.style.boxShadow='0 0 24px rgba(14,165,233,0.08)';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='#26364D';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold" style="background:rgba(20,184,166,0.1);color:#2DD4BF;">🗣️</div>
+          <h3 class="text-base font-bold" style="color:#F8FAFC;">Colloquial Phrase Mapping</h3>
+          <p class="text-xs leading-relaxed font-medium" style="color:#94A3B8;">
             Automatically maps everyday conversational Hindi into medical SIG codes: <i>"subah-shaam"</i> ➔ Twice daily, <i>"khali pet"</i> ➔ Before food, <i>"paanch din"</i> ➔ 5 days.
           </p>
         </div>
 
-        <!-- Feature 3 -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-3 hover:shadow-md transition">
-          <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold">
-            💊
-          </div>
-          <h3 class="text-base font-bold text-slate-900">Phonetic Medicine Matcher</h3>
-          <p class="text-xs text-slate-600 leading-relaxed font-medium">
+        <div class="rounded-2xl p-6 space-y-3" style="background:#111C2E;border:1px solid #26364D;transition:border-color .25s,box-shadow .25s,transform .25s;" onmouseenter="this.style.borderColor='rgba(14,165,233,0.35)';this.style.boxShadow='0 0 24px rgba(14,165,233,0.08)';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='#26364D';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold" style="background:rgba(129,140,248,0.1);color:#818CF8;">💊</div>
+          <h3 class="text-base font-bold" style="color:#F8FAFC;">Phonetic Medicine Matcher</h3>
+          <p class="text-xs leading-relaxed font-medium" style="color:#94A3B8;">
             Curated database of 50+ common Indian pharmaceuticals with Levenshtein fuzzy matching to catch and correct phonetic errors like <i>"pento prazol"</i> ➔ Pantoprazole.
           </p>
         </div>
 
-        <!-- Feature 4 -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-3 hover:shadow-md transition">
-          <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold">
-            ⚠️
-          </div>
-          <h3 class="text-base font-bold text-slate-900">Uncertainty Safety Flagging</h3>
-          <p class="text-xs text-slate-600 leading-relaxed font-medium">
+        <div class="rounded-2xl p-6 space-y-3" style="background:#111C2E;border:1px solid #26364D;transition:border-color .25s,box-shadow .25s,transform .25s;" onmouseenter="this.style.borderColor='rgba(14,165,233,0.35)';this.style.boxShadow='0 0 24px rgba(14,165,233,0.08)';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='#26364D';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold" style="background:rgba(245,158,11,0.1);color:#F59E0B;">⚠️</div>
+          <h3 class="text-base font-bold" style="color:#F8FAFC;">Uncertainty Safety Flagging</h3>
+          <p class="text-xs leading-relaxed font-medium" style="color:#94A3B8;">
             Zero-hallucination protocol: If a doctor forgets to mention a duration or dosage, RxVaani flags the field in amber rather than guessing.
           </p>
         </div>
 
-        <!-- Feature 5 -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-3 hover:shadow-md transition">
-          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold">
-            👨‍⚕️
-          </div>
-          <h3 class="text-base font-bold text-slate-900">"AI Drafts, Doctor Decides"</h3>
-          <p class="text-xs text-slate-600 leading-relaxed font-medium">
+        <div class="rounded-2xl p-6 space-y-3" style="background:#111C2E;border:1px solid #26364D;transition:border-color .25s,box-shadow .25s,transform .25s;" onmouseenter="this.style.borderColor='rgba(14,165,233,0.35)';this.style.boxShadow='0 0 24px rgba(14,165,233,0.08)';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='#26364D';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold" style="background:rgba(16,185,129,0.1);color:#10B981;">👨‍⚕️</div>
+          <h3 class="text-base font-bold" style="color:#F8FAFC;">"AI Drafts, Doctor Decides"</h3>
+          <p class="text-xs leading-relaxed font-medium" style="color:#94A3B8;">
             The doctor retains 100% autonomy. Review, tweak, and approve the clinical draft on a clean interactive table before issuing prescriptions.
           </p>
         </div>
 
-        <!-- Feature 6 -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-3 hover:shadow-md transition">
-          <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold">
-            📄
-          </div>
-          <h3 class="text-base font-bold text-slate-900">Official PDF Prescription</h3>
-          <p class="text-xs text-slate-600 leading-relaxed font-medium">
+        <div class="rounded-2xl p-6 space-y-3" style="background:#111C2E;border:1px solid #26364D;transition:border-color .25s,box-shadow .25s,transform .25s;" onmouseenter="this.style.borderColor='rgba(14,165,233,0.35)';this.style.boxShadow='0 0 24px rgba(14,165,233,0.08)';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='#26364D';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold" style="background:rgba(167,139,250,0.1);color:#A78BFA;">📄</div>
+          <h3 class="text-base font-bold" style="color:#F8FAFC;">Official PDF Prescription</h3>
+          <p class="text-xs leading-relaxed font-medium" style="color:#94A3B8;">
             Generates high-resolution vector PDF prescriptions with clinic headers, doctor registration numbers, authorized signature line, and statutory AI disclaimers.
           </p>
         </div>
@@ -266,38 +247,38 @@
   </section>
 
   <!-- How It Works (3-Step Flow) -->
-  <section class="py-20 bg-white border-t border-slate-200">
+  <section class="py-20" style="background:#0F172A;border-top:1px solid #26364D;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
       
       <div class="text-center max-w-2xl mx-auto">
-        <span class="text-xs font-bold uppercase tracking-wider text-teal-600">Seamless 3-Step Flow</span>
-        <h2 class="text-3xl font-black text-slate-900 tracking-tight mt-1">
+        <span class="text-xs font-bold uppercase tracking-wider" style="color:#14B8A6;">Seamless 3-Step Flow</span>
+        <h2 class="text-3xl font-black tracking-tight mt-1" style="color:#F8FAFC;">
           How RxVaani Integrates Into Your OPD Workflow
         </h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         
-        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 relative">
-          <div class="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center font-bold text-xs">1</div>
-          <h3 class="text-sm font-bold text-slate-900">Speak Naturally</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">
+        <div class="p-6 rounded-2xl space-y-3 relative" style="background:#111C2E;border:1px solid #26364D;">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white" style="background:#0EA5E9;">1</div>
+          <h3 class="text-sm font-bold" style="color:#F8FAFC;">Speak Naturally</h3>
+          <p class="text-xs leading-relaxed" style="color:#94A3B8;">
             Record live consultation with clinic mic or upload an audio file. Speak in Hindi, Hinglish, or Indian English.
           </p>
         </div>
 
-        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 relative">
-          <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs">2</div>
-          <h3 class="text-sm font-bold text-slate-900">AI Transcribes & Extracts</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">
+        <div class="p-6 rounded-2xl space-y-3 relative" style="background:#111C2E;border:1px solid #26364D;">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white" style="background:#14B8A6;">2</div>
+          <h3 class="text-sm font-bold" style="color:#F8FAFC;">AI Transcribes &amp; Extracts</h3>
+          <p class="text-xs leading-relaxed" style="color:#94A3B8;">
             RxVaani AI transcribes speech into text, and the clinical NLP engine extracts structured medicines, doses, and diagnosis.
           </p>
         </div>
 
-        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 relative">
-          <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">3</div>
-          <h3 class="text-sm font-bold text-slate-900">Review, Sign & Issue PDF</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">
+        <div class="p-6 rounded-2xl space-y-3 relative" style="background:#111C2E;border:1px solid #26364D;">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white" style="background:#10B981;">3</div>
+          <h3 class="text-sm font-bold" style="color:#F8FAFC;">Review, Sign &amp; Issue PDF</h3>
+          <p class="text-xs leading-relaxed" style="color:#94A3B8;">
             Doctor checks the interactive table, resolves any flagged items, and approves with 1 click to download the official prescription.
           </p>
         </div>
@@ -308,16 +289,16 @@
   </section>
 
   <!-- Final CTA Callout Banner -->
-  <section class="py-16 bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white text-center">
+  <section class="py-16 text-center" style="background:linear-gradient(135deg,#000000 0%,#0F172A 50%,#000000 100%);border-top:1px solid #26364D;border-bottom:1px solid #26364D;">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-      <h2 class="text-3xl sm:text-4xl font-black tracking-tight">
+      <h2 class="text-3xl sm:text-4xl font-black tracking-tight" style="color:#F8FAFC;">
         Ready to Experience AI Clinical Documentation?
       </h2>
-      <p class="text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
+      <p class="text-sm max-w-xl mx-auto leading-relaxed" style="color:#94A3B8;">
         Start an OPD consultation right now. No sign-up required — works instantly with live mic or file upload.
       </p>
       <div class="pt-2">
-        <a href="/consultation" class="inline-flex items-center space-x-2 px-8 py-4 rounded-2xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-sm shadow-xl shadow-sky-500/30 transition transform hover:-translate-y-0.5">
+        <a href="/consultation" class="inline-flex items-center space-x-2 px-8 py-4 rounded-2xl font-black text-sm transition transform hover:-translate-y-0.5" style="background:#0EA5E9;color:#fff;box-shadow:0 0 32px rgba(14,165,233,0.35);">
           <span>Let's Start — Launch OPD Consultation Room</span>
           <span class="text-base">➔</span>
         </a>
@@ -326,10 +307,10 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-8 text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between flex-wrap gap-4">
+  <footer class="py-8" style="background:#0F172A;border-top:1px solid #26364D;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between flex-wrap gap-4 text-xs" style="color:#475569;">
       <div class="flex items-center space-x-2">
-        <span class="font-bold text-slate-800">RxVaani</span>
+        <span class="font-bold" style="color:#94A3B8;">RxVaani</span>
         <span>•</span>
         <span>AI Clinical EHR &amp; Prescription Scribe for Indian Healthcare</span>
       </div>

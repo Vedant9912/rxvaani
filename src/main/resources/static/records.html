@@ -9,11 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/navbar.js"></script>
+  <link rel="stylesheet" href="/rxvaani-theme.css">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-900">
+<body class="min-h-screen flex flex-col" style="background:#000000;color:#F8FAFC;">
 
   <!-- Navbar -->
   <div id="navbar-container"></div>
@@ -21,57 +22,57 @@
   <!-- Main Container -->
   <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-6">
     
-    <!-- Page Header Banner -->
-    <div class="flex items-center justify-between flex-wrap gap-4 border-b border-slate-200 pb-5">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between flex-wrap gap-4 pb-5" style="border-bottom:1px solid #26364D;">
       <div>
-        <h1 class="text-2xl font-black text-slate-900 tracking-tight flex items-center space-x-2">
+        <h1 class="text-2xl font-black tracking-tight flex items-center space-x-2" style="color:#F8FAFC;">
           <span>Patient EHR Consultation Records</span>
-          <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200" id="records-count">
+          <span class="text-xs font-bold px-2.5 py-0.5 rounded-full" id="records-count" style="background:#162338;color:#94A3B8;border:1px solid #26364D;">
             0 Consultations
           </span>
         </h1>
-        <p class="text-xs text-slate-500 font-medium mt-1">
+        <p class="text-xs font-medium mt-1" style="color:#475569;">
           Historical archive of doctor-approved digital prescriptions and clinical transcripts.
         </p>
       </div>
 
-      <a href="/" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center space-x-1.5">
+      <a href="/consultation" class="px-4 py-2 font-bold text-xs rounded-xl transition flex items-center space-x-1.5 text-white" style="background:#0EA5E9;box-shadow:0 0 16px rgba(14,165,233,0.25);">
         <span>+ New Consultation</span>
       </a>
     </div>
 
     <!-- Records Filter & Search Bar -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs flex items-center justify-between gap-4 flex-wrap">
+    <div class="rounded-2xl p-4 flex items-center justify-between gap-4 flex-wrap" style="background:#111C2E;border:1px solid #26364D;">
       <div class="flex items-center space-x-2 w-full md:w-96">
-        <span class="text-slate-400">🔍</span>
-        <input type="text" id="search-input" oninput="filterRecords()" placeholder="Search patient by name or diagnosis..." class="w-full text-xs font-medium text-slate-800 focus:outline-none bg-transparent" />
+        <span style="color:#475569;">🔍</span>
+        <input type="text" id="search-input" oninput="filterRecords()" placeholder="Search patient by name or diagnosis..." class="w-full text-xs font-medium focus:outline-none" style="background:transparent;color:#F8FAFC;" />
       </div>
-      <div class="text-xs text-slate-500 font-medium">
+      <div class="text-xs font-medium" style="color:#475569;">
         Encrypted Session Archive
       </div>
     </div>
 
     <!-- Table Card -->
-    <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+    <div class="rounded-2xl overflow-hidden" style="background:#111C2E;border:1px solid #26364D;">
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs">
-          <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">
+          <thead style="background:#0F172A;border-bottom:1px solid #26364D;">
             <tr>
-              <th class="py-3 px-4">Rx ID</th>
-              <th class="py-3 px-4">Date</th>
-              <th class="py-3 px-4">Patient Name</th>
-              <th class="py-3 px-4">Age / Gender</th>
-              <th class="py-3 px-4">Diagnosis</th>
-              <th class="py-3 px-4">Medications</th>
-              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Rx ID</th>
+              <th class="py-3 px-4" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Date</th>
+              <th class="py-3 px-4" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Patient Name</th>
+              <th class="py-3 px-4" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Age / Gender</th>
+              <th class="py-3 px-4" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Diagnosis</th>
+              <th class="py-3 px-4" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Medications</th>
+              <th class="py-3 px-4" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Status</th>
             </tr>
           </thead>
-          <tbody id="records-tbody" class="divide-y divide-slate-100 bg-white"></tbody>
+          <tbody id="records-tbody" style="background:transparent;"></tbody>
         </table>
       </div>
 
       <!-- Empty State -->
-      <div id="empty-state" class="py-12 text-center text-xs text-slate-400 hidden">
+      <div id="empty-state" class="py-12 text-center text-xs hidden" style="color:#475569;">
         No consultation records found. Start a new consultation to generate records.
       </div>
     </div>
@@ -83,7 +84,6 @@
 
     let allRecords = [];
 
-    // Load Records from localStorage (with 2 default realistic consultations if fresh)
     try {
       allRecords = JSON.parse(localStorage.getItem('rx_records_list')) || [];
     } catch (e) {
@@ -129,19 +129,19 @@
 
       emptyState.classList.add('hidden');
       tbody.innerHTML = list.map(r => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="py-3 px-4 font-mono font-bold text-sky-700">${r.id}</td>
-          <td class="py-3 px-4 text-slate-500 font-medium">${r.date}</td>
-          <td class="py-3 px-4 font-bold text-slate-900">${r.patientName}</td>
-          <td class="py-3 px-4 text-slate-600">${r.age} Yrs / ${r.gender}</td>
-          <td class="py-3 px-4 font-semibold text-slate-800">${r.diagnosis}</td>
+        <tr style="border-bottom:1px solid #26364D;transition:background .15s;" onmouseenter="this.style.background='#162338'" onmouseleave="this.style.background='transparent'">
+          <td class="py-3 px-4" style="font-family:monospace;font-weight:700;color:#38BDF8;">${r.id}</td>
+          <td class="py-3 px-4 font-medium" style="color:#475569;">${r.date}</td>
+          <td class="py-3 px-4 font-bold" style="color:#F8FAFC;">${r.patientName}</td>
+          <td class="py-3 px-4" style="color:#94A3B8;">${r.age} Yrs / ${r.gender}</td>
+          <td class="py-3 px-4 font-semibold" style="color:#94A3B8;">${r.diagnosis}</td>
           <td class="py-3 px-4">
-            <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold">
+            <span style="padding:0.125rem 0.5rem;border-radius:9999px;background:#162338;color:#94A3B8;border:1px solid #26364D;font-size:0.6875rem;font-weight:700;">
               ${r.medicinesCount} Drugs
             </span>
           </td>
           <td class="py-3 px-4">
-            <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold inline-flex items-center space-x-1">
+            <span style="padding:0.25rem 0.625rem;border-radius:9999px;background:rgba(16,185,129,0.12);color:#10B981;border:1px solid rgba(16,185,129,0.3);font-size:0.6875rem;font-weight:700;display:inline-flex;align-items:center;gap:0.25rem;">
               <span>✓</span>
               <span>${r.status}</span>
             </span>

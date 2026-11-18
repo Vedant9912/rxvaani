@@ -9,11 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/navbar.js"></script>
+  <link rel="stylesheet" href="/rxvaani-theme.css">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-900">
+<body class="min-h-screen flex flex-col" style="background:#000000;color:#F8FAFC;">
 
   <!-- Navbar -->
   <div id="navbar-container"></div>
@@ -21,67 +22,67 @@
   <!-- Main Container -->
   <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-6">
     
-    <!-- Page Header Banner -->
-    <div class="border-b border-slate-200 pb-5">
-      <h1 class="text-2xl font-black text-slate-900 tracking-tight">
-        Clinic & Practitioner Configuration
+    <!-- Page Header -->
+    <div class="pb-5" style="border-bottom:1px solid #26364D;">
+      <h1 class="text-2xl font-black tracking-tight" style="color:#F8FAFC;">
+        Clinic &amp; Practitioner Configuration
       </h1>
-      <p class="text-xs text-slate-500 font-medium mt-1">
-        Configure doctor credentials, hospital header branding, and Gnani Prisma Speech AI keys.
+      <p class="text-xs font-medium mt-1" style="color:#475569;">
+        Configure doctor credentials, hospital header branding, and speech AI keys.
       </p>
     </div>
 
     <!-- Settings Card -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-xs space-y-6">
+    <div class="rounded-2xl p-6 md:p-8 space-y-6" style="background:#111C2E;border:1px solid #26364D;">
       
       <!-- Section 1: Practitioner Details -->
       <div>
-        <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
+        <h2 class="text-sm font-bold pb-2.5 mb-4 flex items-center space-x-2" style="color:#F8FAFC;border-bottom:1px solid rgba(38,54,77,0.5);">
           <span>👨‍⚕️ Medical Practitioner Credentials</span>
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Doctor Full Name & Degrees</label>
-            <input type="text" id="cfg-doctor-name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
+            <label class="font-bold block mb-1" style="color:#94A3B8;">Doctor Full Name &amp; Degrees</label>
+            <input type="text" id="cfg-doctor-name" class="w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium focus:outline-none" style="background:#0F172A;border-color:#26364D;color:#F8FAFC;" />
           </div>
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Medical Registration Number (MCI/NMC)</label>
-            <input type="text" id="cfg-doctor-reg" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
+            <label class="font-bold block mb-1" style="color:#94A3B8;">Medical Registration Number (MCI/NMC)</label>
+            <input type="text" id="cfg-doctor-reg" class="w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium focus:outline-none" style="background:#0F172A;border-color:#26364D;color:#F8FAFC;" />
           </div>
         </div>
       </div>
 
       <!-- Section 2: Clinic Branding -->
       <div>
-        <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
-          <span>🏥 Clinic & Hospital Information</span>
+        <h2 class="text-sm font-bold pb-2.5 mb-4 flex items-center space-x-2" style="color:#F8FAFC;border-bottom:1px solid rgba(38,54,77,0.5);">
+          <span>🏥 Clinic &amp; Hospital Information</span>
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Clinic / Hospital Name</label>
-            <input type="text" id="cfg-clinic-name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
+            <label class="font-bold block mb-1" style="color:#94A3B8;">Clinic / Hospital Name</label>
+            <input type="text" id="cfg-clinic-name" class="w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium focus:outline-none" style="background:#0F172A;border-color:#26364D;color:#F8FAFC;" />
           </div>
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Clinic Address & Phone</label>
-            <input type="text" id="cfg-clinic-addr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
+            <label class="font-bold block mb-1" style="color:#94A3B8;">Clinic Address &amp; Phone</label>
+            <input type="text" id="cfg-clinic-addr" class="w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium focus:outline-none" style="background:#0F172A;border-color:#26364D;color:#F8FAFC;" />
           </div>
         </div>
       </div>
 
       <!-- Section 3: Speech AI & STT -->
       <div>
-        <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
-          <span>🎙️ Gnani AI Prisma Speech-to-Text API</span>
+        <h2 class="text-sm font-bold pb-2.5 mb-4 flex items-center space-x-2" style="color:#F8FAFC;border-bottom:1px solid rgba(38,54,77,0.5);">
+          <span>🎙️ RxVaani Speech AI Configuration</span>
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Gnani API Key (X-API-Key-ID)</label>
-            <input type="password" id="cfg-gnani-key" placeholder="app.gnani.ai/voice API Key" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium" />
-            <span class="text-[10px] text-slate-400 mt-1 block">5,000 free credits at app.gnani.ai/voice</span>
+            <label class="font-bold block mb-1" style="color:#94A3B8;">Speech API Key</label>
+            <input type="password" id="cfg-gnani-key" placeholder="Enter your speech API key" class="w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium focus:outline-none" style="background:#0F172A;border-color:#26364D;color:#F8FAFC;" />
+            <span style="font-size:0.625rem;color:#475569;display:block;margin-top:0.25rem;">Secure API credentials for speech recognition</span>
           </div>
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Extraction LLM Provider</label>
-            <select id="cfg-llm-provider" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs font-medium bg-white">
+            <label class="font-bold block mb-1" style="color:#94A3B8;">Extraction LLM Provider</label>
+            <select id="cfg-llm-provider" class="w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium focus:outline-none" style="background:#0F172A;border-color:#26364D;color:#F8FAFC;">
               <option value="Gemini">Google Gemini 1.5 Flash</option>
               <option value="OpenAI">OpenAI GPT-4o-mini</option>
               <option value="Groq">Groq (Llama-3.3)</option>
@@ -92,11 +93,11 @@
       </div>
 
       <!-- Save CTA -->
-      <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-        <span id="save-msg" class="text-xs font-bold text-emerald-600 hidden">
+      <div class="pt-4 flex items-center justify-between" style="border-top:1px solid rgba(38,54,77,0.5);">
+        <span id="save-msg" class="text-xs font-bold hidden" style="color:#10B981;">
           ✓ Configuration saved successfully!
         </span>
-        <button onclick="saveSettings()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-md shadow-sky-600/20 transition ml-auto">
+        <button onclick="saveSettings()" class="px-6 py-2.5 font-bold text-xs rounded-xl transition ml-auto text-white" style="background:#0EA5E9;box-shadow:0 0 20px rgba(14,165,233,0.25);">
           Save Settings
         </button>
       </div>
@@ -108,7 +109,6 @@
   <script>
     document.getElementById('navbar-container').innerHTML = renderNavbar('settings');
 
-    // Populate existing values
     document.getElementById('cfg-doctor-name').value = localStorage.getItem('rx_doctor_name') || 'Dr. Vedant Sharma, MBBS, MD';
     document.getElementById('cfg-doctor-reg').value = localStorage.getItem('rx_doctor_reg') || 'MCI-Reg: 84920/2019';
     document.getElementById('cfg-clinic-name').value = localStorage.getItem('rx_clinic_name') || 'Aarogya Clinic & Diagnostics';
@@ -129,6 +129,18 @@
       msg.classList.remove('hidden');
       setTimeout(() => msg.classList.add('hidden'), 2500);
     }
+
+    // Focus glow effect
+    document.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('focus', () => {
+        el.style.borderColor = '#0EA5E9';
+        el.style.boxShadow = '0 0 0 3px rgba(14,165,233,0.15)';
+      });
+      el.addEventListener('blur', () => {
+        el.style.borderColor = '#26364D';
+        el.style.boxShadow = 'none';
+      });
+    });
   </script>
 </body>
 </html>

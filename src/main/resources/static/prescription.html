@@ -9,11 +9,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/navbar.js"></script>
+  <link rel="stylesheet" href="/rxvaani-theme.css">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    /* Transparent inputs inside prescription card */
+    .rx-inline-input {
+      background: transparent !important;
+      border: none !important;
+      border-bottom: 1px solid #26364D !important;
+      color: #F8FAFC !important;
+      outline: none;
+      width: 100%;
+    }
+    .rx-inline-input:focus { border-bottom-color: #0EA5E9 !important; }
+    .rx-inline-input::placeholder { color: #475569 !important; }
+    @media print {
+      body { background: white !important; color: #0F172A !important; }
+      #navbar-container, .no-print { display: none !important; }
+      .rx-print-card { background: white !important; color: #0F172A !important; border: none !important; box-shadow: none !important; }
+      .rx-inline-input { color: #0F172A !important; border-bottom-color: #CBD5E1 !important; }
+      .rx-clinic-header { background: #0F172A !important; }
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-900">
+<body class="min-h-screen flex flex-col" style="background:#000000;color:#F8FAFC;">
 
   <!-- Navbar -->
   <div id="navbar-container"></div>
@@ -22,52 +41,52 @@
   <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-6">
     
     <!-- Top Action Toolbar -->
-    <div class="flex items-center justify-between flex-wrap gap-4 border-b border-slate-200 pb-4">
+    <div class="flex items-center justify-between flex-wrap gap-4 pb-4 no-print" style="border-bottom:1px solid #26364D;">
       <div>
-        <h1 class="text-xl font-extrabold text-slate-900 tracking-tight flex items-center space-x-2">
+        <h1 class="text-xl font-extrabold tracking-tight flex items-center space-x-2" style="color:#F8FAFC;">
           <span>Digital Prescription Pad</span>
-          <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(16,185,129,0.12);color:#10B981;border:1px solid rgba(16,185,129,0.3);">
             Doctor Review Mode
           </span>
         </h1>
-        <p class="text-xs text-slate-500 font-medium mt-0.5">
+        <p class="text-xs font-medium mt-0.5" style="color:#475569;">
           "AI Drafts, Doctor Decides." Verify and approve before official issuance.
         </p>
       </div>
 
       <div class="flex items-center space-x-3">
-        <a href="/studio" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+        <a href="/studio" class="px-3.5 py-2 rounded-xl font-bold text-xs transition" style="background:#162338;border:1px solid #26364D;color:#94A3B8;">
           ← Back to Voice Studio
         </a>
-        <button id="btn-issue" onclick="issueAndDownloadPdf()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md shadow-emerald-600/20 flex items-center space-x-2">
+        <button id="btn-issue" onclick="issueAndDownloadPdf()" class="px-5 py-2.5 rounded-xl font-bold text-xs transition flex items-center space-x-2" style="background:#10B981;color:#fff;box-shadow:0 0 20px rgba(16,185,129,0.25);">
           <span id="pdf-spinner" class="hidden animate-spin">📄</span>
-          <span>✅ Sign & Issue Official PDF</span>
+          <span>✅ Sign &amp; Issue Official PDF</span>
         </button>
       </div>
     </div>
 
     <!-- Safety Warning Banner (Amber) -->
-    <div id="uncertain-box" class="hidden bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl text-amber-900 text-xs">
-      <div class="font-bold flex items-center space-x-1.5 text-amber-900 mb-1">
+    <div id="uncertain-box" class="hidden p-4 rounded-xl text-xs" style="background:rgba(245,158,11,0.1);border-left:4px solid #F59E0B;">
+      <div class="font-bold flex items-center space-x-1.5 mb-1" style="color:#FCD34D;">
         <span>⚠️ Doctor Verification Alert:</span>
-        <span class="font-normal text-amber-800">Missing or ambiguous clinical parameters detected in consultation audio:</span>
+        <span class="font-normal" style="color:#FDE68A;">Missing or ambiguous clinical parameters detected in consultation audio:</span>
       </div>
-      <ul id="uncertain-list" class="list-disc list-inside space-y-0.5 text-amber-800 font-medium ml-1"></ul>
+      <ul id="uncertain-list" class="list-disc list-inside space-y-0.5 font-medium ml-1" style="color:#FDE68A;"></ul>
     </div>
 
     <!-- The Official Prescription Document Card -->
-    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+    <div class="rounded-2xl overflow-hidden rx-print-card" style="background:#111C2E;border:1px solid #26364D;">
       
       <!-- Clinic & Doctor Header Banner -->
-      <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 flex items-center justify-between">
+      <div class="rx-clinic-header text-white p-6 flex items-center justify-between" style="background:linear-gradient(135deg,#000000 0%,#162338 100%);">
         <div>
-          <div class="text-xl font-bold tracking-tight" id="disp-clinic-name">Aarogya Clinic & Diagnostics</div>
-          <div class="text-xs text-slate-300 font-medium mt-1" id="disp-clinic-addr">Shop 12, Health Square, MG Road, New Delhi</div>
+          <div class="text-xl font-bold tracking-tight" id="disp-clinic-name">Aarogya Clinic &amp; Diagnostics</div>
+          <div class="text-xs font-medium mt-1" id="disp-clinic-addr" style="color:#94A3B8;">Shop 12, Health Square, MG Road, New Delhi</div>
         </div>
         <div class="text-right">
-          <div class="text-base font-bold text-sky-300" id="disp-doctor-name">Dr. Vedant Sharma, MBBS, MD</div>
-          <div class="text-xs text-slate-400 font-mono mt-0.5" id="disp-doctor-reg">MCI-Reg: 84920/2019</div>
-          <div class="text-xs text-slate-400 mt-0.5">Date: <span id="disp-rx-date"></span></div>
+          <div class="text-base font-bold" id="disp-doctor-name" style="color:#38BDF8;">Dr. Vedant Sharma, MBBS, MD</div>
+          <div class="text-xs mt-0.5 font-mono" id="disp-doctor-reg" style="color:#475569;">MCI-Reg: 84920/2019</div>
+          <div class="text-xs mt-0.5" style="color:#475569;">Date: <span id="disp-rx-date"></span></div>
         </div>
       </div>
 
@@ -75,67 +94,67 @@
       <div class="p-6 md:p-8 space-y-6">
         
         <!-- Patient Information Strip -->
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+        <div class="p-4 rounded-xl grid grid-cols-1 md:grid-cols-4 gap-4 text-xs" style="background:#0F172A;border:1px solid #26364D;">
           <div>
-            <span class="text-[11px] text-slate-500 font-semibold block">Patient Name:</span>
-            <input type="text" id="rx-patient-name" class="font-bold text-slate-900 bg-transparent border-b border-slate-300 focus:outline-none focus:border-sky-500 w-full" />
+            <span class="block font-semibold mb-1" style="font-size:0.6875rem;color:#475569;">Patient Name:</span>
+            <input type="text" id="rx-patient-name" class="rx-inline-input font-bold" />
           </div>
           <div>
-            <span class="text-[11px] text-slate-500 font-semibold block">Age:</span>
-            <input type="number" id="rx-patient-age" class="font-bold text-slate-900 bg-transparent border-b border-slate-300 focus:outline-none focus:border-sky-500 w-full" />
+            <span class="block font-semibold mb-1" style="font-size:0.6875rem;color:#475569;">Age:</span>
+            <input type="number" id="rx-patient-age" class="rx-inline-input font-bold" />
           </div>
           <div>
-            <span class="text-[11px] text-slate-500 font-semibold block">Gender:</span>
-            <select id="rx-patient-gender" class="font-bold text-slate-900 bg-transparent border-b border-slate-300 focus:outline-none focus:border-sky-500 w-full">
+            <span class="block font-semibold mb-1" style="font-size:0.6875rem;color:#475569;">Gender:</span>
+            <select id="rx-patient-gender" class="rx-inline-input font-bold">
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
             </select>
           </div>
           <div>
-            <span class="text-[11px] text-slate-500 font-semibold block">Prescription ID:</span>
-            <span class="font-mono font-bold text-slate-700" id="disp-rx-id">RXV-2026-001</span>
+            <span class="block font-semibold mb-1" style="font-size:0.6875rem;color:#475569;">Prescription ID:</span>
+            <span class="font-mono font-bold" id="disp-rx-id" style="color:#94A3B8;">RXV-2026-001</span>
           </div>
         </div>
 
         <!-- Clinical Findings -->
         <div class="space-y-2 text-xs">
           <div class="flex items-center space-x-2">
-            <span class="font-bold text-slate-900">Provisional Diagnosis:</span>
-            <input type="text" id="rx-diagnosis" class="font-bold text-sky-700 bg-transparent border-b border-slate-300 focus:outline-none focus:border-sky-500 flex-1" placeholder="e.g. Acute Viral Fever" />
+            <span class="font-bold" style="color:#F8FAFC;">Provisional Diagnosis:</span>
+            <input type="text" id="rx-diagnosis" class="rx-inline-input font-bold flex-1" placeholder="e.g. Acute Viral Fever" style="color:#38BDF8 !important;" />
           </div>
           <div>
-            <span class="font-semibold text-slate-700">Symptoms:</span>
-            <input type="text" id="rx-symptoms" class="text-slate-600 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 ml-1 w-2/3" placeholder="Symptoms list..." />
+            <span class="font-semibold" style="color:#94A3B8;">Symptoms:</span>
+            <input type="text" id="rx-symptoms" class="rx-inline-input ml-1" style="width:66%;" placeholder="Symptoms list..." />
           </div>
         </div>
 
         <!-- Medicines Table -->
         <div>
           <div class="flex items-center justify-between mb-2.5">
-            <div class="flex items-center space-x-1.5 font-black text-slate-900 text-sm">
-              <span class="text-xl text-sky-600">℞</span>
+            <div class="flex items-center space-x-1.5 font-black text-sm" style="color:#F8FAFC;">
+              <span class="text-xl" style="color:#0EA5E9;">℞</span>
               <span>Prescribed Medications</span>
             </div>
-            <button onclick="addMedRow()" class="px-3 py-1 bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-xs rounded-lg border border-sky-200 transition">
+            <button onclick="addMedRow()" class="px-3 py-1 font-bold text-xs rounded-lg transition" style="background:rgba(14,165,233,0.12);color:#38BDF8;border:1px solid rgba(14,165,233,0.3);">
               + Add Medication
             </button>
           </div>
 
-          <div class="border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+          <div class="rounded-xl overflow-hidden" style="border:1px solid #26364D;">
             <table class="w-full text-left text-xs">
-              <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">
+              <thead style="background:#0F172A;border-bottom:1px solid #26364D;">
                 <tr>
-                  <th class="py-3 px-3 w-10">#</th>
-                  <th class="py-3 px-3">Medicine & Strength</th>
-                  <th class="py-3 px-3 w-24">Dose</th>
-                  <th class="py-3 px-3 w-32">Frequency</th>
-                  <th class="py-3 px-3 w-36">Timing</th>
-                  <th class="py-3 px-3 w-28">Duration</th>
-                  <th class="py-3 px-3 text-center w-16">Action</th>
+                  <th class="py-3 px-3 w-10" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">#</th>
+                  <th class="py-3 px-3" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Medicine &amp; Strength</th>
+                  <th class="py-3 px-3 w-24" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Dose</th>
+                  <th class="py-3 px-3 w-32" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Frequency</th>
+                  <th class="py-3 px-3 w-36" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Timing</th>
+                  <th class="py-3 px-3 w-28" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Duration</th>
+                  <th class="py-3 px-3 text-center w-16" style="color:#475569;font-weight:700;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;">Action</th>
                 </tr>
               </thead>
-              <tbody id="med-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+              <tbody id="med-table-body" style="background:transparent;"></tbody>
             </table>
           </div>
         </div>
@@ -143,26 +162,26 @@
         <!-- General Advice & Follow-up -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs pt-2">
           <div>
-            <label class="font-bold text-slate-800 block mb-1">General Advice & Dietary Precautions:</label>
-            <textarea id="rx-advice" rows="3" class="w-full p-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 bg-slate-50/50"></textarea>
+            <label class="font-bold block mb-1" style="color:#94A3B8;">General Advice &amp; Dietary Precautions:</label>
+            <textarea id="rx-advice" rows="3" class="w-full p-2.5 rounded-xl border text-xs focus:outline-none" style="background:#0F172A;border-color:#26364D;color:#F8FAFC;resize:vertical;"></textarea>
           </div>
           <div>
-            <label class="font-bold text-slate-800 block mb-1">Recommended Follow-up Visit:</label>
-            <input type="text" id="rx-followup" placeholder="e.g. After 3 days" class="w-full p-2.5 rounded-xl border border-slate-200 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500 bg-slate-50/50" />
-            <div class="mt-3 p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-500 leading-relaxed">
-              ⚕️ <b>Legal Protocol:</b> Official PDF will include doctor's registration number, signature seal, and the statutory AI review disclaimer.
+            <label class="font-bold block mb-1" style="color:#94A3B8;">Recommended Follow-up Visit:</label>
+            <input type="text" id="rx-followup" placeholder="e.g. After 3 days" class="w-full p-2.5 rounded-xl border text-xs focus:outline-none" style="background:#0F172A;border-color:#26364D;color:#F8FAFC;" />
+            <div class="mt-3 p-3 rounded-xl text-xs leading-relaxed" style="background:#0F172A;border:1px solid #26364D;color:#475569;">
+              ⚕️ <b style="color:#94A3B8;">Legal Protocol:</b> Official PDF will include doctor's registration number, signature seal, and the statutory AI review disclaimer.
             </div>
           </div>
         </div>
 
         <!-- Document Footer -->
-        <div class="pt-6 border-t border-slate-200 flex items-center justify-between flex-wrap gap-4">
-          <div class="text-xs text-slate-400">
+        <div class="pt-6 flex items-center justify-between flex-wrap gap-4" style="border-top:1px solid #26364D;">
+          <div class="text-xs" style="color:#475569;">
             AI-assisted clinical draft verified by registered medical practitioner.
           </div>
           <div class="text-right">
-            <div class="text-xs font-bold text-slate-900">Dr. Vedant Sharma</div>
-            <div class="text-[11px] text-slate-500">Authorized Medical Signature & Stamp</div>
+            <div class="text-xs font-bold" style="color:#F8FAFC;">Dr. Vedant Sharma</div>
+            <div style="font-size:0.6875rem;color:#475569;">Authorized Medical Signature &amp; Stamp</div>
           </div>
         </div>
 
@@ -170,13 +189,13 @@
 
     </div>
 
-    <!-- Success Modal Card -->
-    <div id="success-banner" class="hidden bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex items-center justify-between text-xs text-emerald-900 font-semibold shadow-xs">
+    <!-- Success Banner -->
+    <div id="success-banner" class="hidden p-4 rounded-2xl flex items-center justify-between text-xs font-semibold" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10B981;">
       <div class="flex items-center space-x-2">
         <span class="text-base">🎉</span>
         <span>Prescription PDF successfully approved, signed, and downloaded! Saved to Patient Records.</span>
       </div>
-      <a href="/records" class="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl font-bold">
+      <a href="/records" class="px-3.5 py-1.5 rounded-xl font-bold text-white transition" style="background:#059669;">
         View All Records ➔
       </a>
     </div>
@@ -188,7 +207,6 @@
     document.getElementById('disp-rx-date').innerText = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
     document.getElementById('disp-rx-id').innerText = `RXV-${Date.now().toString().slice(-6)}`;
 
-    // Load Clinic details
     const doctorName = localStorage.getItem('rx_doctor_name') || 'Dr. Vedant Sharma, MBBS, MD';
     const clinicName = localStorage.getItem('rx_clinic_name') || 'Aarogya Clinic & Diagnostics';
     const clinicAddr = localStorage.getItem('rx_clinic_address') || 'Shop 12, Health Square, MG Road, New Delhi';
@@ -199,7 +217,6 @@
     document.getElementById('disp-clinic-addr').innerText = clinicAddr;
     document.getElementById('disp-doctor-reg').innerText = doctorReg;
 
-    // Load Prescription Data from session
     let rxData = null;
     try {
       rxData = JSON.parse(sessionStorage.getItem('rx_prescription_json'));
@@ -208,7 +225,6 @@
     }
 
     if (!rxData) {
-      // Default fallback if opened directly
       rxData = {
         patient: { name: sessionStorage.getItem('rx_patient_name') || 'Ramesh Kumar', age: 42, gender: 'Male' },
         symptoms: ['Fever', 'Body ache'],
@@ -222,7 +238,6 @@
       };
     }
 
-    // Populate Fields
     document.getElementById('rx-patient-name').value = rxData.patient?.name || '';
     document.getElementById('rx-patient-age').value = rxData.patient?.age || '';
     document.getElementById('rx-patient-gender').value = rxData.patient?.gender || 'Male';
@@ -231,40 +246,40 @@
     document.getElementById('rx-advice').value = (rxData.advice || []).join('\n');
     document.getElementById('rx-followup').value = rxData.follow_up || '';
 
-    // Handle Uncertain Fields
     if (rxData.uncertain_fields && rxData.uncertain_fields.length > 0) {
       document.getElementById('uncertain-box').classList.remove('hidden');
       const list = document.getElementById('uncertain-list');
       list.innerHTML = rxData.uncertain_fields.map(u => `<li>${u}</li>`).join('');
     }
 
-    // Render Medicines Table
     function renderMedTable() {
       const tbody = document.getElementById('med-table-body');
       tbody.innerHTML = '';
       (rxData.medicines || []).forEach((m, idx) => {
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-50 transition";
+        tr.style.cssText = 'border-bottom:1px solid #26364D;transition:background .15s;';
+        tr.onmouseenter = () => { tr.style.background = '#162338'; };
+        tr.onmouseleave = () => { tr.style.background = 'transparent'; };
         tr.innerHTML = `
-          <td class="py-2.5 px-3 font-mono text-slate-400">${idx + 1}</td>
+          <td class="py-2.5 px-3" style="font-family:monospace;color:#475569;">${idx + 1}</td>
           <td class="py-2.5 px-3">
-            <input type="text" value="${m.name}" onchange="updateMed(${idx}, 'name', this.value)" class="font-bold text-slate-900 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-32" />
-            <input type="text" value="${m.strength || ''}" placeholder="Strength" onchange="updateMed(${idx}, 'strength', this.value)" class="ml-1 text-slate-600 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-16 text-[11px]" />
+            <input type="text" value="${m.name}" onchange="updateMed(${idx}, 'name', this.value)" class="rx-inline-input font-bold" style="width:8rem;" />
+            <input type="text" value="${m.strength || ''}" placeholder="Strength" onchange="updateMed(${idx}, 'strength', this.value)" class="rx-inline-input ml-1" style="width:4rem;font-size:0.6875rem;" />
           </td>
           <td class="py-2.5 px-3">
-            <input type="text" value="${m.dose || '1 tab'}" onchange="updateMed(${idx}, 'dose', this.value)" class="text-slate-700 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-16" />
+            <input type="text" value="${m.dose || '1 tab'}" onchange="updateMed(${idx}, 'dose', this.value)" class="rx-inline-input" style="width:4rem;" />
           </td>
           <td class="py-2.5 px-3">
-            <input type="text" value="${m.frequency || 'Twice daily'}" onchange="updateMed(${idx}, 'frequency', this.value)" class="text-slate-700 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-24 font-medium" />
+            <input type="text" value="${m.frequency || 'Twice daily'}" onchange="updateMed(${idx}, 'frequency', this.value)" class="rx-inline-input font-medium" style="width:6rem;" />
           </td>
           <td class="py-2.5 px-3">
-            <input type="text" value="${m.timing || 'After food'}" onchange="updateMed(${idx}, 'timing', this.value)" class="text-slate-700 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-28" />
+            <input type="text" value="${m.timing || 'After food'}" onchange="updateMed(${idx}, 'timing', this.value)" class="rx-inline-input" style="width:7rem;" />
           </td>
           <td class="py-2.5 px-3">
-            <input type="text" value="${m.duration || '3 days'}" onchange="updateMed(${idx}, 'duration', this.value)" class="text-slate-700 bg-transparent border-b border-slate-200 focus:outline-none focus:border-sky-500 w-16" />
+            <input type="text" value="${m.duration || '3 days'}" onchange="updateMed(${idx}, 'duration', this.value)" class="rx-inline-input" style="width:4rem;" />
           </td>
           <td class="py-2.5 px-3 text-center">
-            <button onclick="removeMed(${idx})" class="text-red-500 hover:text-red-700 font-bold px-1.5 py-0.5 rounded hover:bg-red-50">✕</button>
+            <button onclick="removeMed(${idx})" style="color:#EF4444;font-weight:700;padding:0.125rem 0.375rem;border-radius:0.25rem;transition:background .15s;" onmouseenter="this.style.background='rgba(239,68,68,0.15)'" onmouseleave="this.style.background='transparent'">✕</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -289,9 +304,7 @@
 
     renderMedTable();
 
-    // Issue and Download PDF
     async function issueAndDownloadPdf() {
-      // Sync form values
       rxData.patient.name = document.getElementById('rx-patient-name').value.trim();
       rxData.patient.age = parseInt(document.getElementById('rx-patient-age').value) || null;
       rxData.patient.gender = document.getElementById('rx-patient-gender').value;
@@ -327,9 +340,7 @@
           a.click();
           a.remove();
 
-          // Save to Patient Records in localStorage
           saveToHistory(rxData);
-
           document.getElementById('success-banner').classList.remove('hidden');
         } else {
           alert('Failed to generate PDF.');
