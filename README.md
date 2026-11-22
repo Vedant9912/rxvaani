@@ -12,7 +12,7 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-Open: http://localhost:8000
+Open: https://rxvaani.onrender.com/
 
 ## 📋 Pages
 | URL | Page |
